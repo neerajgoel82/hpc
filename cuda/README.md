@@ -226,9 +226,27 @@ ncu ./program
 
 ## Resources
 
-- Check `START_HERE.md` for quick start guide
-- See `CURRICULUM_COMPLETE.md` for full curriculum
-- Refer to `QUICK_START.md` for setup instructions
+### Documentation
+- **[samples/START_HERE.md](samples/START_HERE.md)** - Quick start guide
+- **[samples/CURRICULUM_COMPLETE.md](samples/CURRICULUM_COMPLETE.md)** - Complete CUDA curriculum
+- **[samples/QUICK_START.md](samples/QUICK_START.md)** - Setup instructions
+- **[samples/FCC_CUDA_COLAB_COMPLETE.md](samples/FCC_CUDA_COLAB_COMPLETE.md)** - FreeCodeCamp course guide
+- **samples/README.md** - Overview of sample organization
+
+### Learning Materials
+- **samples/colab/** - 81+ Jupyter notebooks for Google Colab
+  - Learn CUDA without local GPU
+  - Complete curriculum in interactive notebooks
+  - GPU provided by Google Colab
+- **samples/collab-fcc-course/** - FreeCodeCamp CUDA course
+  - Modules 5-9 covering advanced topics
+  - Profiling, streams, atomics, and more
+- **samples/local/** - Native GPU samples
+  - For systems with NVIDIA GPUs
+  - Projects and examples for local execution
+
+### Utilities
+- **samples/convert_cuda_to_colab.py** - Convert .cu files to Colab notebooks
 
 ## Common Pitfalls
 
@@ -238,14 +256,43 @@ ncu ./program
 - Too many/too few threads per block
 - Not freeing device memory
 
+## Sample Count
+
+### Colab Notebooks
+- **81+ Jupyter notebooks** across multiple topics
+- Interactive learning without local GPU
+- Complete curriculum coverage
+
+### FCC Course
+- **Modules 5-9** with advanced CUDA topics
+- Profiling, streams, atomics, unified memory
+- Production-ready patterns
+
+### Local Samples
+- Native GPU examples
+- Projects for local execution
+- Performance benchmarking
+
+**Total**: 105+ files (notebooks, documentation, scripts)
+
 ## Next Steps
 
-- Start with simple vector operations
-- Progress to matrix operations
-- Explore optimization techniques
-- Build complete applications in [projects/](projects/)
-- Compare performance with [C++](../cpp/) implementations
+1. **For Beginners (No GPU)**:
+   - Start with [samples/colab/](samples/colab/) notebooks
+   - Open in Google Colab (free GPU access)
+   - Follow the curriculum from START_HERE.md
 
----
+2. **For Local GPU**:
+   - Explore [samples/local/](samples/local/) examples
+   - Compile and run on your NVIDIA GPU
+   - Benchmark and profile your code
 
-**Note**: This directory structure is ready for content migration from existing cuda-samples repository.
+3. **Advanced Learning**:
+   - Work through FCC course modules
+   - Study optimization techniques
+   - Build complete applications in [projects/](projects/)
+
+4. **Cross-Language Comparison**:
+   - Compare with [C++](../cpp/) implementations
+   - Understand when to use GPU vs CPU
+   - Measure speedup and efficiency
