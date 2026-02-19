@@ -1,0 +1,40 @@
+{
+    // ===============================================
+    // HPC Monorepo - Recommended VSCode Extensions
+    // ===============================================
+    "recommendations": [
+        // C/C++ Development
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cmake-tools",
+
+        // Python Development
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.black-formatter",
+        "ms-python.flake8",
+
+        // CUDA Development
+        "nvidia.nsight-vscode-edition",
+
+        // Jupyter Notebooks
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers",
+
+        // Code Running
+        "formulahendry.code-runner",
+
+        // Git
+        "eamodio.gitlens",
+
+        // Markdown
+        "yzhang.markdown-all-in-one",
+        "davidanson.vscode-markdownlint",
+
+        // Utilities
+        "gruntfuggly.todo-tree",
+        "streetsidesoftware.code-spell-checker",
+        "editorconfig.editorconfig"
+    ]
+}

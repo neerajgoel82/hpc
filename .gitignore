@@ -159,7 +159,8 @@ Makefile
 # ============================================
 
 # Visual Studio Code
-.vscode/
+# Allow root .vscode/, but ignore in subdirectories
+**/samples/.vscode/
 *.code-workspace
 .history/
 
