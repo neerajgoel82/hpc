@@ -308,17 +308,28 @@ jupyter lab
 
 ## Resources
 
-- Check phase-specific README files (when migrated)
-- See `LEARNING_PATH.md` for detailed curriculum
-- Refer to `GETTING_STARTED.md` for setup
+- **[samples/LEARNING_PATH.md](samples/LEARNING_PATH.md)** - Complete Python curriculum from basics to specialization
+- **[samples/GETTING_STARTED.md](samples/GETTING_STARTED.md)** - Setup and environment configuration
+- **[samples/QUICK_REFERENCE.md](samples/QUICK_REFERENCE.md)** - Quick syntax and feature reference
+- **samples/README.md** - Overview of the sample structure
+- Phase-specific directories contain focused examples with TODOs
+
+## Sample Count
+
+- **Phase 1 (Foundations)**: 19 samples covering basics and syntax
+- **Phase 2 (Intermediate)**: 6 samples on data structures and functions
+- **Phase 3 (OOP)**: 5 samples on classes and object-oriented programming
+- **Phase 4 (Advanced)**: 3 samples on advanced Python features
+- **Phase 5 (Specialization)**: Domain-specific topics
+
+**Total**: 24+ Python source files across 5 phases
 
 ## Next Steps
 
+- Work through phases sequentially (1 → 5)
+- Complete the TODO exercises in each sample
 - Apply concepts in [projects/](projects/)
 - Compare with [C](../c/) and [C++](../cpp/) implementations
 - Learn [CUDA](../cuda/) for GPU acceleration
-- Use Python for prototyping HPC algorithms
-
----
-
-**Note**: This directory structure is ready for content migration from existing python-samples repository.
+- Use Python for rapid prototyping of HPC algorithms
+- Explore NumPy and Numba for performance optimization
