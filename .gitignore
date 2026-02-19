@@ -1,0 +1,311 @@
+# HPC Monorepo .gitignore
+# Combined patterns for C, C++, CUDA, and Python
+
+# ============================================
+# C/C++ Build Artifacts
+# ============================================
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Static libraries
+*.a
+*.la
+*.lo
+*.lib
+
+# Executables
+a.out
+*.exe
+*.out
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# ============================================
+# CUDA Specific
+# ============================================
+
+# CUDA compiled files
+*.ptx
+*.cubin
+*.fatbin
+
+# CUDA profiler output
+*.nvvp
+*.qdrep
+
+# CUDA cache
+*.nv-cache/
+
+# ============================================
+# Python
+# ============================================
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# Poetry
+poetry.lock
+
+# ============================================
+# Build directories
+# ============================================
+
+# Common build directories
+build/
+bin/
+obj/
+out/
+target/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+!samples/**/Makefile
+!projects/**/Makefile
+
+# ============================================
+# IDEs and Editors
+# ============================================
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+.history/
+
+# Visual Studio
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj
+*.vcxproj.filters
+
+# JetBrains IDEs (CLion, PyCharm, etc.)
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Vim
+*.swp
+*.swo
+*~
+.*.sw?
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Xcode
+*.xcodeproj/
+*.xcworkspace/
+
+# ============================================
+# Operating Systems
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+
+# Linux
+.directory
+.Trash-*
+
+# ============================================
+# Profiling and Performance
+# ============================================
+
+# Profiler output
+*.prof
+*.lprof
+gmon.out
+perf.data
+perf.data.old
+callgrind.out.*
+cachegrind.out.*
+
+# Valgrind
+vgcore.*
+*.log
+
+# ============================================
+# Temporary and Log Files
+# ============================================
+
+# Logs
+*.log
+logs/
+*.logfile
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.old
+
+# Core dumps
+core
+core.*
+
+# ============================================
+# Claude Code
+# ============================================
+
+# Claude Code local settings (keep claude.md, ignore local settings)
+.claude/settings.local.json
+.claude/worktrees/
+
+# ============================================
+# Documentation Build
+# ============================================
+
+# Doxygen
+Doxygen/
+html/
+latex/
+
+# Sphinx
+_build/
+_static/
+_templates/
+
+# ============================================
+# Data and Datasets
+# ============================================
+
+# Large data files (uncomment if needed)
+# *.dat
+# *.csv
+# *.h5
+# *.hdf5
+# *.bin
+
+# Datasets (uncomment if they should not be tracked)
+# shared/datasets/*
+# !shared/datasets/README.md
+
+# ============================================
+# Archives
+# ============================================
+
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+
+# ============================================
+# Custom Project Specific
+# ============================================
+
+# Add project-specific ignores below
