@@ -51,17 +51,61 @@ The original `c-samples` repository remains at:
 
 ---
 
-### ⏳ C++ Samples - PENDING
+### ✅ C++ Samples - COMPLETED
 
 **Source**: `/Users/negoel/code/mywork/github/neerajgoel82/cpp-samples`
 **Destination**: `hpc/cpp/samples/`
-**Status**: Ready for migration
+**Date**: 2026-02-19
 
-Expected content:
-- 14 module directories (01-basics through 14-gpu-prep)
-- `LEARNING_PATH.md`
-- `COMPILATION_STATUS.md`
-- `test_all_modules.sh`
+#### What Was Migrated
+
+**Module Directories** (all 14 modules copied):
+- `01-basics/` - 24 samples on fundamentals
+- `02-functions-structure/` - 8 samples on program organization
+- `03-pointers-memory/` - 4 samples on memory management
+- `04-classes-oop/` - 5 samples on OOP basics
+- `05-inheritance-polymorphism/` - 4 samples on polymorphism
+- `06-operators-advanced/` - 3 samples on advanced features
+- `07-templates/` - 2 samples on generic programming
+- `08-stl/` - 2 samples on standard library
+- `09-modern-cpp/` - 3 samples on C++11/14/17
+- `10-exceptions/` - 1 sample on error handling
+- `11-multithreading/` - 2 samples on concurrency
+- `12-build-debug/` - 2 samples on tooling
+- `13-gpu-advanced/` - 2 samples on GPU concepts
+- `14-gpu-prep/` - 3 samples preparing for CUDA
+
+**Documentation**:
+- `LEARNING_PATH.md` - Complete curriculum guide
+- `MODULES_SUMMARY.md` - Module-by-module breakdown
+- `COMPILATION_STATUS.md` - Compilation verification
+- `COMPLETE_SUMMARY.md` - Comprehensive overview
+- `README.md` - Quick reference
+
+**Build/Test System**:
+- `test_all_modules.sh` - Automated compilation test script
+- `.vscode/` - VSCode configuration for C++ development
+
+**Statistics**:
+- Total C++ source/header files: 46+
+- All samples follow C++17 standard
+- Compilation tested and verified
+
+#### Verification
+
+- ✅ All 14 modules copied
+- ✅ Sample program (hello_world) compiles and runs
+- ✅ test_all_modules.sh script preserved and executable
+- ✅ Documentation preserved
+- ✅ cpp/README.md updated with references
+
+#### Original Repository
+
+The original `cpp-samples` repository remains at:
+- GitHub: `git@github.com:neerajgoel82/cpp-samples.git`
+- Local: `/Users/negoel/code/mywork/github/neerajgoel82/cpp-samples`
+
+**Note**: Original repository can be archived or kept as reference.
 
 ---
 

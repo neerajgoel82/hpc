@@ -61,8 +61,13 @@ cd samples/
 # Compile a single file
 g++ -std=c++17 -Wall -Wextra file.cpp -o output
 
-# Using test script (if available)
+# Test all modules (compiles all samples)
 ./test_all_modules.sh
+
+# Compile specific module
+cd 01-basics/
+g++ -std=c++17 -Wall -Wextra 01_hello_world.cpp -o hello
+./hello
 ```
 
 ### Compilation Standards
@@ -111,9 +116,13 @@ All C++ code uses:
 
 ## Resources
 
-- Module-specific README files (when migrated)
-- Check `LEARNING_PATH.md` for detailed curriculum
-- See `COMPILATION_STATUS.md` for sample verification
+- **[samples/LEARNING_PATH.md](samples/LEARNING_PATH.md)** - Complete curriculum from basics to GPU prep
+- **[samples/MODULES_SUMMARY.md](samples/MODULES_SUMMARY.md)** - Summary of all 14 modules
+- **[samples/COMPILATION_STATUS.md](samples/COMPILATION_STATUS.md)** - Compilation verification status
+- **[samples/COMPLETE_SUMMARY.md](samples/COMPLETE_SUMMARY.md)** - Comprehensive overview
+- **samples/README.md** - Quick reference and getting started
+- **samples/test_all_modules.sh** - Script to compile and test all modules
+- Module-specific directories contain focused examples
 
 ## Common Patterns
 
@@ -136,6 +145,23 @@ try {
 }
 ```
 
+## Using the Test Script
+
+The samples directory includes a comprehensive test script:
+
+```bash
+cd samples/
+
+# Run test script to compile all modules
+./test_all_modules.sh
+```
+
+The script will:
+- Compile all C++ samples across all 14 modules
+- Report compilation status for each file
+- Show which samples compiled successfully
+- Highlight any compilation errors
+
 ## Tips
 
 - Always compile with `-Wall -Wextra`
@@ -143,6 +169,7 @@ try {
 - Leverage the STL - don't reinvent the wheel
 - Read compiler error messages (especially template errors)
 - Understand move semantics for performance
+- Work through modules sequentially (01 → 14)
 
 ## Performance Considerations
 
@@ -153,13 +180,29 @@ For HPC applications:
 - Profile before optimizing
 - Understand RVO (Return Value Optimization)
 
+## Sample Count
+
+- **Module 01 (Basics)**: 24 samples covering fundamentals
+- **Module 02 (Functions)**: 8 samples on program structure
+- **Module 03 (Pointers)**: 4 samples on memory management
+- **Module 04 (Classes)**: 5 samples on OOP basics
+- **Module 05 (Inheritance)**: 4 samples on polymorphism
+- **Module 06 (Operators)**: 3 samples on advanced features
+- **Module 07 (Templates)**: 2 samples on generic programming
+- **Module 08 (STL)**: 2 samples on standard library
+- **Module 09 (Modern C++)**: 3 samples on C++11/14/17
+- **Module 10 (Exceptions)**: 1 sample on error handling
+- **Module 11 (Multithreading)**: 2 samples on concurrency
+- **Module 12 (Build/Debug)**: 2 samples on tooling
+- **Module 13 (GPU Advanced)**: 2 samples on GPU concepts
+- **Module 14 (GPU Prep)**: 3 samples preparing for CUDA
+
+**Total**: 46+ C++ source files across 14 modules
+
 ## Next Steps
 
+- Work through modules sequentially (01 → 14)
 - Apply concepts in [projects/](projects/)
 - Explore [CUDA](../cuda/) for GPU acceleration
-- Compare with [C](../c/) implementations
-- Use [Python](../python/) for prototyping
-
----
-
-**Note**: This directory structure is ready for content migration from existing cpp-samples repository.
+- Compare with [C](../c/) implementations for performance differences
+- Use [Python](../python/) for rapid prototyping
