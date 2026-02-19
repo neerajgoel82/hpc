@@ -54,8 +54,9 @@ This directory contains utility scripts for managing the HPC learning monorepo. 
 **What it tests**:
 
 **C Tests** (`c/samples/`):
-- Looks for `Makefile` with `make test` target
-- Currently: No test target available (C samples use manual compilation)
+- Runs `test_compilation.sh`
+- Compiles 11 representative C samples from all 4 phases
+- Tests single-file compilation and multi-file projects
 
 **C++ Tests** (`cpp/samples/`):
 - Runs `test_all_modules.sh`
@@ -68,9 +69,10 @@ This directory contains utility scripts for managing the HPC learning monorepo. 
 - Skipped if NVCC not found (most CUDA samples are Colab notebooks)
 
 **Python Tests** (`python/samples/`):
-- Runs `pytest` if available
-- Currently: No pytest test files (samples are standalone scripts)
-- Suggests installing pytest if not available
+- Runs `pytest` if available and test files exist
+- Otherwise runs `test_syntax.sh` (syntax validation)
+- Validates 9 representative Python samples from all phases
+- Cleans up `__pycache__` after testing
 
 **Output**:
 - Color-coded results for each language
@@ -80,13 +82,11 @@ This directory contains utility scripts for managing the HPC learning monorepo. 
 - Exit code 1 if any tests fail
 
 **Test Results**:
-⚠️ **Tested with expected limitations**
+✅ **All tests passing**
+- C tests: ✅ 11/11 samples compile successfully
 - C++ tests: ✅ 45/45 modules compile successfully
-- C tests: ⚠️ No test target in Makefile (expected)
-- Python tests: ⚠️ No pytest test files (samples are standalone)
+- Python tests: ✅ 9/9 samples have valid syntax
 - CUDA tests: Skipped (NVCC not available on test system)
-
-**Note**: The "failures" for C and Python are expected - they reflect that formal test suites haven't been set up yet for these languages. The samples work fine when run individually.
 
 ---
 
@@ -135,6 +135,48 @@ This directory contains utility scripts for managing the HPC learning monorepo. 
 - Preserves all source code and Makefiles
 - Cleans Python cache files and Jupyter checkpoints
 - Safe to run repeatedly (idempotent)
+
+---
+
+## Language-Specific Test Scripts
+
+In addition to `test-all.sh`, individual language directories have their own test scripts:
+
+### c/samples/test_compilation.sh
+Compiles representative C samples to verify GCC functionality:
+- Tests 11 samples across all 4 phases
+- Includes single-file and multi-file projects
+- Uses GCC with `-std=c11 -Wall -Wextra -g`
+- Creates temporary directory for binaries (auto-cleaned)
+- Exit code 0 if all compile, 1 if any fail
+
+**Run directly**:
+```bash
+cd c/samples
+./test_compilation.sh
+```
+
+### python/samples/test_syntax.sh
+Validates Python syntax using `py_compile`:
+- Tests 9 samples across all phases
+- Uses `python3 -m py_compile` for validation
+- Cleans up `__pycache__` automatically
+- Exit code 0 if all valid, 1 if any have syntax errors
+
+**Run directly**:
+```bash
+cd python/samples
+./test_syntax.sh
+```
+
+### cpp/samples/test_all_modules.sh
+Comprehensive C++ compilation test:
+- Tests 45 modules across 14 categories
+- Uses G++ with `-std=c++17 -Wall -Wextra -g`
+- Handles multi-file projects
+- Exit code 0 if all compile, 1 if any fail
+
+**Note**: `test-all.sh` automatically uses these scripts when available.
 
 ---
 
@@ -325,16 +367,15 @@ These scripts are designed for CI/CD pipelines:
 - No NVCC (CUDA) installed
 
 **Known Issues**:
-1. C samples don't have a unified Makefile with test target
-2. Python samples are standalone scripts, not unit tests with pytest
-3. `make clean` targets not implemented in all Makefiles (script handles gracefully)
+1. `make clean` targets not implemented in all Makefiles (script handles gracefully)
+2. CUDA tests not available without NVCC
 
 **Future Enhancements**:
-- [ ] Add C Makefile with test target
-- [ ] Add pytest unit tests for Python samples
+- [ ] Add comprehensive unit tests with pytest for Python samples
 - [ ] Add performance benchmarking script
 - [ ] Add coverage reporting
 - [ ] Add code quality checks (linting, formatting)
+- [ ] Add CUDA sample testing for environments with GPU
 
 ---
 

@@ -73,10 +73,20 @@ run_language_tests() {
 }
 
 # Test C samples
-run_language_tests "C" "$PROJECT_ROOT/c/samples" "make test"
+if command -v gcc >/dev/null 2>&1; then
+    run_language_tests "C" "$PROJECT_ROOT/c/samples" "./test_compilation.sh"
+else
+    echo -e "${YELLOW}Skipping C tests (gcc not found)${NC}"
+    echo ""
+fi
 
 # Test C++ samples
-run_language_tests "C++" "$PROJECT_ROOT/cpp/samples" "./test_all_modules.sh"
+if command -v g++ >/dev/null 2>&1; then
+    run_language_tests "C++" "$PROJECT_ROOT/cpp/samples" "./test_all_modules.sh"
+else
+    echo -e "${YELLOW}Skipping C++ tests (g++ not found)${NC}"
+    echo ""
+fi
 
 # Test CUDA samples (if available)
 if command -v nvcc >/dev/null 2>&1; then
@@ -88,15 +98,12 @@ fi
 
 # Test Python samples
 if command -v python3 >/dev/null 2>&1; then
-    # Check if pytest is available
-    if python3 -c "import pytest" 2>/dev/null; then
-        run_language_tests "Python" "$PROJECT_ROOT/python/samples" "pytest"
+    # Check if pytest is available and if test files exist
+    if python3 -c "import pytest" 2>/dev/null && find "$PROJECT_ROOT/python/samples" -name "test_*.py" -o -name "*_test.py" | grep -q .; then
+        run_language_tests "Python (pytest)" "$PROJECT_ROOT/python/samples" "pytest"
     else
-        echo -e "${BLUE}Testing Python...${NC}"
-        echo "-----------------------------------"
-        echo -e "${YELLOW}  pytest not installed (optional)${NC}"
-        echo -e "${YELLOW}  Install with: pip install pytest${NC}"
-        echo ""
+        # Run syntax checks instead
+        run_language_tests "Python" "$PROJECT_ROOT/python/samples" "./test_syntax.sh"
     fi
 else
     echo -e "${YELLOW}Skipping Python tests (python3 not found)${NC}"
