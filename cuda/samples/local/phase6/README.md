@@ -1,0 +1,1 @@
+# Phase 6 - Local CUDA Programs\n\n## Build\n```bash\nmake\n```\n\n## Run\n```bash\nmake test\n```\n
