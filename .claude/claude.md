@@ -12,7 +12,8 @@ This is a learning repository for High Performance Computing containing samples 
 - `python/` - Python programming samples and projects
 
 ### Within Each Language Directory
-- `samples/` - Small, focused examples demonstrating specific concepts
+- `learning/` - Small, focused examples demonstrating specific concepts (C, C++)
+- `samples/` - Small, focused examples demonstrating specific concepts (CUDA, Python)
 - `projects/` - Larger, complete implementations combining multiple concepts
 - `notebooks/` - Jupyter notebooks (when needed)
 - `.claude/claude.md` - Language-specific instructions

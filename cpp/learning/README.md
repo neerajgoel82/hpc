@@ -25,8 +25,8 @@ A comprehensive, hands-on curriculum covering C++ fundamentals through GPU progr
 
 ### Getting Started
 ```bash
-# Navigate to the C++ samples directory
-cd cpp/samples
+# Navigate to the C++ learning directory
+cd cpp/learning
 
 # Start with Module 1
 cd 01-basics

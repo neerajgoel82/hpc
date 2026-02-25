@@ -22,7 +22,7 @@ gcc -std=c11 -Wall -Wextra -O2 file.c -o output
 - Use `-O2` for performance samples
 
 ### Build System
-- Makefile exists in `samples/` directory
+- Makefile exists in `learning/` directory
 - Don't create new build systems unless required
 - Test with `make clean && make` before committing
 

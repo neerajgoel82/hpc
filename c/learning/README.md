@@ -44,8 +44,8 @@ Install MinGW or use WSL (Windows Subsystem for Linux)
 
 ### Your First Program
 ```bash
-# Navigate to C samples directory
-cd c/samples
+# Navigate to C learning directory
+cd c/learning
 
 # Compile and run your first program
 gcc -std=c11 -Wall -Wextra phase1-foundations/01_hello_world.c -o hello
@@ -78,7 +78,7 @@ make clean
 ## Repository Structure
 
 ```
-c/samples/
+c/learning/
 ├── phase1-foundations/        # 7 files - Weeks 1-2
 │   ├── 01_hello_world.c
 │   ├── 02_data_types.c
