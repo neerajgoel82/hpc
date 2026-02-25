@@ -3,7 +3,7 @@
 
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -g
-LDFLAGS =  Multithreading:-pthread
+LDFLAGS = -pthread
 
 # Directories
 CLASSWORK_DIR = classwork

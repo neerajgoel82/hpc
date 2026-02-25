@@ -124,12 +124,12 @@ clean:
 	-find . -name '*.dSYM' -type d -exec rm -rf {} +
 	@echo "=== Clean Complete! ==="
 
-# Test all modules (if test targets exist)
+# Test all modules (build classwork and run each program)
 test:
 	@echo "=== Testing All C++ Samples ==="
 	@for module in $(MODULES); do \
 		echo "\n=== Testing $$module ==="; \
-		$(MAKE) -C $$module test 2>/dev/null || echo "No test target for $$module"; \
+		$(MAKE) -C $$module test || exit 1; \
 	done
 	@echo "\n=== All Tests Complete! ==="
 

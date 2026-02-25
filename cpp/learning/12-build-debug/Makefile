@@ -3,7 +3,7 @@
 
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -g
-LDFLAGS =  Build Systems and Debugging
+LDFLAGS =
 
 # Directories
 CLASSWORK_DIR = classwork
