@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda_runtime.h>
-#include <math.h>
 
 #define CUDA_CHECK(call) \
     do { \
@@ -13,43 +12,97 @@
         } \
     } while(0)
 
-
-__global__ void kernel1(float* data, int n) {
+// Fast kernel
+__global__ void fastKernel(float *data, int n) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx < n) {
-        for (int i = 0; i < 50; i++)
-            data[idx] = sqrtf(data[idx] + 1.0f);
+        data[idx] = data[idx] * 2.0f;
     }
 }
 
-__global__ void kernel2(float* data, int n) {
+// Memory-bound kernel
+__global__ void memoryBoundKernel(float *input, float *output, int n) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < n) data[idx] = data[idx] * 2.0f + 1.0f;
+    if (idx < n) {
+        output[idx] = input[idx] + input[(idx + 1) % n] + input[(idx + 2) % n];
+    }
+}
+
+// Compute-bound kernel
+__global__ void computeBoundKernel(float *data, int n) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < n) {
+        float val = data[idx];
+        for (int i = 0; i < 100; i++) {
+            val = sqrtf(val + 1.0f);
+        }
+        data[idx] = val;
+    }
 }
 
 int main() {
     printf("=== Profiling Demo ===\n\n");
-    const int N = 1 << 20;
-    size_t bytes = N * sizeof(float);
+    printf("Compile with: nvcc -arch=sm_70 -lineinfo 36_profiling_demo.cu\n");
+    printf("Profile with: nvprof ./a.out\n");
+    printf("Or use: nsys profile ./a.out\n\n");
 
-    float *h_data = (float*)malloc(bytes);
-    for (int i = 0; i < N; i++) h_data[i] = (float)i;
+    int n = 1 << 20;
+    size_t size = n * sizeof(float);
 
-    float *d_data;
-    CUDA_CHECK(cudaMalloc(&d_data, bytes));
-    CUDA_CHECK(cudaMemcpy(d_data, h_data, bytes, cudaMemcpyHostToDevice));
+    float *h_data = (float*)malloc(size);
+    for (int i = 0; i < n; i++) h_data[i] = i + 1.0f;
 
-    printf("Running kernels for profiling...\n");
-    kernel1<<<(N + 255) / 256, 256>>>(d_data, N);
-    kernel2<<<(N + 255) / 256, 256>>>(d_data, N);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    float *d_data, *d_input, *d_output;
+    CUDA_CHECK(cudaMalloc(&d_data, size));
+    CUDA_CHECK(cudaMalloc(&d_input, size));
+    CUDA_CHECK(cudaMalloc(&d_output, size));
 
-    printf("\nTo profile this application:\n");
-    printf("  nvprof ./36_profiling_demo\n");
-    printf("  ncu --set full ./36_profiling_demo\n");
-    printf("  nsys profile ./36_profiling_demo\n");
+    CUDA_CHECK(cudaMemcpy(d_data, h_data, size, cudaMemcpyHostToDevice));
+    CUDA_CHECK(cudaMemcpy(d_input, h_data, size, cudaMemcpyHostToDevice));
+
+    int threads = 256;
+    int blocks = (n + threads - 1) / threads;
+
+    cudaEvent_t start, stop;
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
+
+    // Test 1: Fast kernel
+    cudaEventRecord(start);
+    fastKernel<<<blocks, threads>>>(d_data, n);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    float fastTime;
+    cudaEventElapsedTime(&fastTime, start, stop);
+
+    // Test 2: Memory-bound
+    cudaEventRecord(start);
+    memoryBoundKernel<<<blocks, threads>>>(d_input, d_output, n);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    float memTime;
+    cudaEventElapsedTime(&memTime, start, stop);
+
+    // Test 3: Compute-bound
+    cudaEventRecord(start);
+    computeBoundKernel<<<blocks, threads>>>(d_data, n);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
+    float compTime;
+    cudaEventElapsedTime(&compTime, start, stop);
+
+    printf("Results:\n");
+    printf("  Fast kernel:         %.2f ms\n", fastTime);
+    printf("  Memory-bound kernel: %.2f ms\n", memTime);
+    printf("  Compute-bound kernel: %.2f ms\n", compTime);
+    printf("\nUse profiler to see detailed metrics!\n");
 
     free(h_data);
     cudaFree(d_data);
+    cudaFree(d_input);
+    cudaFree(d_output);
+    cudaEventDestroy(start);
+    cudaEventDestroy(stop);
+
     return 0;
 }

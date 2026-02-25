@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda_runtime.h>
-#include <math.h>
 
 #define CUDA_CHECK(call) \
     do { \
@@ -13,61 +12,85 @@
         } \
     } while(0)
 
-
-__global__ void kernelA(float* data, int n) {
+__global__ void kernel1(float *data, int n) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < n) data[idx] = data[idx] * 2.0f;
+    if (idx < n) {
+        data[idx] = data[idx] * 2.0f;
+    }
 }
 
-__global__ void kernelB(float* data, int n) {
+__global__ void kernel2(float *data, int n) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < n) data[idx] = data[idx] + 10.0f;
+    if (idx < n) {
+        data[idx] = data[idx] + 1.0f;
+    }
 }
 
-__global__ void kernelC(float* data, int n) {
+__global__ void kernel3(float *data, int n) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < n) data[idx] = sqrtf(data[idx]);
+    if (idx < n) {
+        data[idx] = sqrtf(data[idx]);
+    }
 }
 
 int main() {
     printf("=== Multi-Kernel Synchronization ===\n\n");
-    const int N = 1 << 20;
-    size_t bytes = N * sizeof(float);
 
-    float *h_data = (float*)malloc(bytes);
-    for (int i = 0; i < N; i++) h_data[i] = (float)(i + 1);
+    int n = 1 << 24;
+    size_t size = n * sizeof(float);
+
+    float *h_data = (float*)malloc(size);
+    for (int i = 0; i < n; i++) h_data[i] = i + 1.0f;
 
     float *d_data;
-    CUDA_CHECK(cudaMalloc(&d_data, bytes));
-    CUDA_CHECK(cudaMemcpy(d_data, h_data, bytes, cudaMemcpyHostToDevice));
+    CUDA_CHECK(cudaMalloc(&d_data, size));
+    CUDA_CHECK(cudaMemcpy(d_data, h_data, size, cudaMemcpyHostToDevice));
 
-    int threads = 256, blocks = (N + threads - 1) / threads;
+    int threads = 256;
+    int blocks = (n + threads - 1) / threads;
 
     cudaEvent_t start, stop;
-    CUDA_CHECK(cudaEventCreate(&start));
-    CUDA_CHECK(cudaEventCreate(&stop));
-    CUDA_CHECK(cudaEventRecord(start));
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
 
-    kernelA<<<blocks, threads>>>(d_data, N);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    cudaEventRecord(start);
 
-    kernelB<<<blocks, threads>>>(d_data, N);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    // Launch multiple kernels with dependencies
+    kernel1<<<blocks, threads>>>(d_data, n);
+    CUDA_CHECK(cudaDeviceSynchronize());  // Wait for kernel1
 
-    kernelC<<<blocks, threads>>>(d_data, N);
-    CUDA_CHECK(cudaDeviceSynchronize());
+    kernel2<<<blocks, threads>>>(d_data, n);
+    CUDA_CHECK(cudaDeviceSynchronize());  // Wait for kernel2
 
-    CUDA_CHECK(cudaEventRecord(stop));
-    CUDA_CHECK(cudaEventSynchronize(stop));
+    kernel3<<<blocks, threads>>>(d_data, n);
+
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
 
     float ms;
-    CUDA_CHECK(cudaEventElapsedTime(&ms, start, stop));
-    printf("Sequential execution: %.3f ms\n", ms);
-    printf("Synchronization ensures kernels run in order\n");
-    printf("Methods: cudaDeviceSynchronize, cudaStreamSynchronize, cudaEventSynchronize\n");
+    cudaEventElapsedTime(&ms, start, stop);
+
+    CUDA_CHECK(cudaMemcpy(h_data, d_data, size, cudaMemcpyDeviceToHost));
+
+    // Verify: sqrt((i+1)*2 + 1)
+    bool correct = true;
+    for (int i = 0; i < 1000; i++) {
+        float expected = sqrtf((i + 1.0f) * 2.0f + 1.0f);
+        if (abs(h_data[i] - expected) > 1e-3) {
+            correct = false;
+            printf("Error at %d: got %.3f, expected %.3f\n", i, h_data[i], expected);
+            break;
+        }
+    }
+
+    printf("Result: %s\n", correct ? "CORRECT" : "INCORRECT");
+    printf("Total time: %.2f ms\n", ms);
+    printf("Three kernels synchronized successfully\n");
 
     free(h_data);
     cudaFree(d_data);
-    cudaEventDestroy(start); cudaEventDestroy(stop);
+    cudaEventDestroy(start);
+    cudaEventDestroy(stop);
+
     return 0;
 }

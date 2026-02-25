@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cuda_runtime.h>
-#include <math.h>
 
 #define CUDA_CHECK(call) \
     do { \
@@ -13,54 +12,74 @@
         } \
     } while(0)
 
-
-__global__ void zerocopyKernel(float* data, int n) {
+__global__ void processKernel(float *data, int n) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    if (idx < n) data[idx] = data[idx] * 2.0f;
+    if (idx < n) {
+        data[idx] = sqrtf(data[idx]) * 2.0f + 1.0f;
+    }
 }
 
 int main() {
     printf("=== Zero-Copy Memory ===\n\n");
 
+    int n = 1 << 20;
+    size_t size = n * sizeof(float);
+
+    // Check if device supports mapped memory
     int device;
     cudaDeviceProp prop;
     CUDA_CHECK(cudaGetDevice(&device));
     CUDA_CHECK(cudaGetDeviceProperties(&prop, device));
 
     if (!prop.canMapHostMemory) {
-        printf("Device does not support mapped memory!\n");
+        printf("Device doesn't support mapped memory\n");
         return 1;
     }
 
-    CUDA_CHECK(cudaSetDeviceFlags(cudaDeviceMapHost));
+    // Allocate zero-copy (mapped) memory
+    float *h_data;
+    CUDA_CHECK(cudaHostAlloc(&h_data, size, cudaHostAllocMapped));
 
-    const int N = 1 << 20;
-    size_t bytes = N * sizeof(float);
+    for (int i = 0; i < n; i++) h_data[i] = i + 1.0f;
 
-    float *h_mapped, *d_mapped;
-    CUDA_CHECK(cudaHostAlloc(&h_mapped, bytes, cudaHostAllocMapped));
-    CUDA_CHECK(cudaHostGetDevicePointer(&d_mapped, h_mapped, 0));
+    // Get device pointer to mapped memory
+    float *d_data;
+    CUDA_CHECK(cudaHostGetDevicePointer(&d_data, h_data, 0));
 
-    for (int i = 0; i < N; i++) h_mapped[i] = (float)i;
+    int threads = 256;
+    int blocks = (n + threads - 1) / threads;
 
     cudaEvent_t start, stop;
-    CUDA_CHECK(cudaEventCreate(&start));
-    CUDA_CHECK(cudaEventCreate(&stop));
-    CUDA_CHECK(cudaEventRecord(start));
+    cudaEventCreate(&start);
+    cudaEventCreate(&stop);
 
-    zerocopyKernel<<<(N + 255) / 256, 256>>>(d_mapped, N);
-    CUDA_CHECK(cudaDeviceSynchronize());
-
-    CUDA_CHECK(cudaEventRecord(stop));
-    CUDA_CHECK(cudaEventSynchronize(stop));
+    cudaEventRecord(start);
+    processKernel<<<blocks, threads>>>(d_data, n);
+    cudaEventRecord(stop);
+    cudaEventSynchronize(stop);
 
     float ms;
-    CUDA_CHECK(cudaEventElapsedTime(&ms, start, stop));
-    printf("Zero-copy time: %.3f ms\n", ms);
-    printf("No explicit cudaMemcpy needed, GPU accesses host memory directly\n");
-    printf("Good for: single-use data, avoiding copy overhead\n");
+    cudaEventElapsedTime(&ms, start, stop);
 
-    cudaFreeHost(h_mapped);
-    cudaEventDestroy(start); cudaEventDestroy(stop);
+    // Verify - host can directly access results
+    bool correct = true;
+    for (int i = 0; i < 1000; i++) {
+        float expected = sqrtf(i + 1.0f) * 2.0f + 1.0f;
+        if (abs(h_data[i] - expected) > 1e-3) {
+            correct = false;
+            break;
+        }
+    }
+
+    printf("Result: %s\n", correct ? "CORRECT" : "INCORRECT");
+    printf("Time: %.2f ms\n", ms);
+    printf("Bandwidth: %.2f GB/s\n", (size * 2 / 1e9) / (ms / 1000.0));
+    printf("\nNote: Zero-copy avoids explicit cudaMemcpy!\n");
+    printf("      Host and device share same physical memory\n");
+
+    CUDA_CHECK(cudaFreeHost(h_data));
+    cudaEventDestroy(start);
+    cudaEventDestroy(stop);
+
     return 0;
 }
