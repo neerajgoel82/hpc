@@ -1,6 +1,6 @@
-# Phase 6: PyTorch Deep Learning - Homework
+# Phase 5: Data Science - Homework
 
-This directory contains exercise files for practicing Python concepts learned in classwork.
+This directory contains exercise files for practicing data science concepts learned in classwork.
 
 ## What's in Homework?
 

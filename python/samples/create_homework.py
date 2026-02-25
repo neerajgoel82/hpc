@@ -39,12 +39,12 @@ def extract_exercises(content):
     return None
 
 def create_homework_file(classwork_file, homework_file, exercises, filename):
-    """Create homework file with template and exercises"""
+    """Create homework file with template and exercises. Always writes a file (stub if no exercises)."""
 
     # Extract base name without extension
     base_name = os.path.splitext(filename)[0]
+    exercise_block = exercises if exercises else "# TODO: Implement based on the corresponding classwork file"
 
-    # Create homework file template
     template = f'''"""
 Homework: {filename}
 
@@ -58,7 +58,7 @@ Instructions:
 4. Test your solutions
 """
 
-{exercises if exercises else "# No exercises found"}
+{exercise_block}
 
 # Your code here
 
@@ -70,11 +70,12 @@ if __name__ == "__main__":
     pass
 '''
 
+    os.makedirs(os.path.dirname(homework_file) or '.', exist_ok=True)
     with open(homework_file, 'w') as f:
         f.write(template)
 
-def process_phase(phase):
-    """Process all files in a phase"""
+def process_phase(phase, recursive=False):
+    """Process all files in a phase. If recursive=True, walk classwork subdirs (phase5/phase6)."""
     phase_dir = os.path.join(SAMPLES_DIR, phase)
     classwork_dir = os.path.join(phase_dir, "classwork")
     homework_dir = os.path.join(phase_dir, "homework")
@@ -83,42 +84,62 @@ def process_phase(phase):
         print(f"  Skipping {phase} (classwork not found)")
         return
 
-    # Process each .py file in classwork (not in subdirectories)
+    if recursive:
+        # Walk classwork recursively: preserve path under homework
+        for root, _dirs, files in os.walk(classwork_dir):
+            rel_root = os.path.relpath(root, classwork_dir)
+            for filename in sorted(files):
+                if not filename.endswith('.py'):
+                    continue
+                classwork_file = os.path.join(root, filename)
+                if not os.path.isfile(classwork_file):
+                    continue
+                # homework path mirrors classwork path
+                if rel_root == '.':
+                    homework_file = os.path.join(homework_dir, filename)
+                else:
+                    subdir = os.path.join(homework_dir, rel_root)
+                    os.makedirs(subdir, exist_ok=True)
+                    homework_file = os.path.join(subdir, filename)
+                _process_one_file(classwork_file, homework_file, filename, phase)
+        return
+
+    # Flat structure: only .py files directly in classwork/
     for filename in sorted(os.listdir(classwork_dir)):
         if not filename.endswith('.py'):
             continue
-
         classwork_file = os.path.join(classwork_dir, filename)
-        homework_file = os.path.join(homework_dir, filename)
-
-        # Skip if it's inside a subdirectory
         if not os.path.isfile(classwork_file):
             continue
+        homework_file = os.path.join(homework_dir, filename)
+        _process_one_file(classwork_file, homework_file, filename, phase)
 
-        # Read classwork file
-        try:
-            with open(classwork_file, 'r') as f:
-                content = f.read()
-        except Exception as e:
-            print(f"  Error reading {filename}: {e}")
-            continue
 
-        # Extract exercises
-        exercises = extract_exercises(content)
-
-        if exercises:
-            # Create homework file
-            create_homework_file(classwork_file, homework_file, exercises, filename)
-            print(f"  Created homework/{filename}")
-        else:
-            print(f"  No exercises found in {filename}")
+def _process_one_file(classwork_file, homework_file, filename, phase):
+    """Read classwork, extract exercises, write homework (always create stub)."""
+    try:
+        with open(classwork_file, 'r') as f:
+            content = f.read()
+    except Exception as e:
+        print(f"  Error reading {filename}: {e}")
+        return
+    exercises = extract_exercises(content)
+    # Always create homework file (stub if no exercises)
+    create_homework_file(classwork_file, homework_file, exercises, filename)
+    rel_path = os.path.relpath(homework_file, os.path.join(SAMPLES_DIR, phase))
+    if not rel_path.startswith("homework"):
+        rel_path = os.path.join("homework", rel_path)
+    print(f"  Created {rel_path}")
 
 def main():
     print("Creating homework files from exercises...\n")
 
+    # Phases with topic subdirs (classwork/01-topic/, etc.) need recursive processing
+    recursive_phases = ["phase5-datascience", "phase6-pytorch"]
+
     for phase in PHASES:
         print(f"Processing {phase}...")
-        process_phase(phase)
+        process_phase(phase, recursive=(phase in recursive_phases))
 
     print("\nHomework files created successfully!")
 
