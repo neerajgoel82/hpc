@@ -150,10 +150,6 @@ cmake-build-*/
 CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
-Makefile
-!samples/**/Makefile
-!projects/**/Makefile
-
 # ============================================
 # IDEs and Editors
 # ============================================
