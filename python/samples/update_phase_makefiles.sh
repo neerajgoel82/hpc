@@ -1,3 +1,19 @@
+#!/bin/bash
+# Update phase-level Makefiles for Python
+
+PHASES=(
+    "phase1-foundations:Phase 1: Python Foundations"
+    "phase2-intermediate:Phase 2: Intermediate Python"
+    "phase3-oop:Phase 3: Object-Oriented Programming"
+    "phase4-advanced:Phase 4: Advanced Python"
+    "phase5-datascience:Phase 5: Data Science"
+    "phase6-pytorch:Phase 6: PyTorch Deep Learning"
+)
+
+for entry in "${PHASES[@]}"; do
+    IFS=':' read -r phase name <<< "$entry"
+    
+    cat > "python/samples/$phase/Makefile" << 'MAKEFILE_EOF'
 .PHONY: help clean classwork homework both test test-homework list
 
 PYTHON := python3
@@ -13,7 +29,11 @@ HOMEWORK_SAMPLES := $(wildcard $(HOMEWORK_DIR)/[0-9]*.py)
 HOMEWORK_PROJECTS := $(wildcard $(HOMEWORK_DIR)/project_*.py)
 
 help:
-	@echo "Phase 6: PyTorch Deep Learning - Makefile Commands"
+MAKEFILE_EOF
+    
+    # Add help message
+    cat >> "python/samples/$phase/Makefile" << MAKEFILE_EOF
+	@echo "$name - Makefile Commands"
 	@echo "================================================"
 	@echo "make help         - Show this help message"
 	@echo "make classwork    - Run all classwork programs"
@@ -37,20 +57,20 @@ clean:
 classwork:
 	@echo "Running classwork programs..."
 	@echo "=============================="
-	@for file in $(sort $(CLASSWORK_SAMPLES)); do \
-		echo ""; \
-		echo "Running $$file..."; \
-		$(PYTHON) $$file || exit 1; \
+	@for file in \$(sort \$(CLASSWORK_SAMPLES)); do \\
+		echo ""; \\
+		echo "Running \$\$file..."; \\
+		\$(PYTHON) \$\$file || exit 1; \\
 	done
 	@echo "Classwork complete!"
 
 homework:
 	@echo "Running homework programs..."
 	@echo "=============================="
-	@for file in $(sort $(HOMEWORK_SAMPLES)); do \
-		echo ""; \
-		echo "Running $$file..."; \
-		$(PYTHON) $$file || exit 1; \
+	@for file in \$(sort \$(HOMEWORK_SAMPLES)); do \\
+		echo ""; \\
+		echo "Running \$\$file..."; \\
+		\$(PYTHON) \$\$file || exit 1; \\
 	done
 	@echo "Homework complete!"
 
@@ -64,17 +84,23 @@ test-homework: homework
 
 list:
 	@echo "Classwork files:"
-	@for file in $(sort $(CLASSWORK_SAMPLES)); do echo "  - $$file"; done
-	@if [ -n "$(CLASSWORK_PROJECTS)" ]; then \
-		echo ""; \
-		echo "Classwork projects:"; \
-		for file in $(sort $(CLASSWORK_PROJECTS)); do echo "  - $$file"; done; \
+	@for file in \$(sort \$(CLASSWORK_SAMPLES)); do echo "  - \$\$file"; done
+	@if [ -n "\$(CLASSWORK_PROJECTS)" ]; then \\
+		echo ""; \\
+		echo "Classwork projects:"; \\
+		for file in \$(sort \$(CLASSWORK_PROJECTS)); do echo "  - \$\$file"; done; \\
 	fi
 	@echo ""
 	@echo "Homework files:"
-	@for file in $(sort $(HOMEWORK_SAMPLES)); do echo "  - $$file"; done
-	@if [ -n "$(HOMEWORK_PROJECTS)" ]; then \
-		echo ""; \
-		echo "Homework projects:"; \
-		for file in $(sort $(HOMEWORK_PROJECTS)); do echo "  - $$file"; done; \
+	@for file in \$(sort \$(HOMEWORK_SAMPLES)); do echo "  - \$\$file"; done
+	@if [ -n "\$(HOMEWORK_PROJECTS)" ]; then \\
+		echo ""; \\
+		echo "Homework projects:"; \\
+		for file in \$(sort \$(HOMEWORK_PROJECTS)); do echo "  - \$\$file"; done; \\
 	fi
+MAKEFILE_EOF
+
+    echo "Updated $phase"
+done
+
+echo "All phase Makefiles updated!"

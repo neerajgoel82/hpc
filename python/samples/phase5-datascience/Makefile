@@ -1,127 +1,80 @@
-.PHONY: help install clean run-module test venv check-deps list
+.PHONY: help clean classwork homework both test test-homework list
 
 PYTHON := python3
-VENV := venv
-VENV_BIN := $(VENV)/bin
-PIP := $(VENV_BIN)/pip
-PYTHON_VENV := $(VENV_BIN)/python
+
+# Directories
+CLASSWORK_DIR := classwork
+HOMEWORK_DIR := homework
+
+# Find Python files
+CLASSWORK_SAMPLES := $(wildcard $(CLASSWORK_DIR)/[0-9]*.py)
+CLASSWORK_PROJECTS := $(wildcard $(CLASSWORK_DIR)/project_*.py)
+HOMEWORK_SAMPLES := $(wildcard $(HOMEWORK_DIR)/[0-9]*.py)
+HOMEWORK_PROJECTS := $(wildcard $(HOMEWORK_DIR)/project_*.py)
 
 help:
 	@echo "Phase 5: Data Science - Makefile Commands"
-	@echo "=========================================="
-	@echo "Setup:"
-	@echo "  make venv         - Create virtual environment"
-	@echo "  make install      - Install dependencies (creates venv if needed)"
-	@echo "  make check-deps   - Check installed dependencies"
+	@echo "================================================"
+	@echo "make help         - Show this help message"
+	@echo "make classwork    - Run all classwork programs"
+	@echo "make homework     - Run all homework programs"
+	@echo "make both         - Run both classwork and homework"
+	@echo "make test         - Test classwork programs"
+	@echo "make test-homework- Test homework programs"
+	@echo "make clean        - Remove Python cache files"
+	@echo "make list         - List all files"
 	@echo ""
-	@echo "Running:"
-	@echo "  make run-module MODULE=01-numpy    - Run all files in a module"
-	@echo "  make run-starter                   - Run starter files (NumPy, Pandas)"
-	@echo "  make run-projects                  - Run all project files"
-	@echo ""
-	@echo "Utilities:"
-	@echo "  make list         - List all modules and files"
-	@echo "  make clean        - Remove cache files"
-	@echo "  make clean-all    - Remove cache and virtual environment"
-	@echo "  make test         - Run starter files as test"
-	@echo ""
-	@echo "Examples:"
-	@echo "  make install"
-	@echo "  make run-module MODULE=01-numpy"
-	@echo "  make run-starter"
-
-venv:
-	@if [ ! -d "$(VENV)" ]; then \
-		echo "Creating virtual environment..."; \
-		$(PYTHON) -m venv $(VENV); \
-		echo "Virtual environment created!"; \
-	else \
-		echo "Virtual environment already exists."; \
-	fi
-
-install: venv
-	@echo "Installing dependencies..."
-	$(PIP) install --upgrade pip
-	$(PIP) install -r requirements.txt
-	@echo ""
-	@echo "Installation complete!"
-	@echo "Activate with: source $(VENV_BIN)/activate"
-
-check-deps: venv
-	@echo "Checking installed packages..."
-	@$(PIP) list | grep -E "(numpy|pandas|matplotlib|seaborn|scikit-learn|scipy|statsmodels|plotly|jupyter)" || echo "Some packages may be missing. Run 'make install'"
-
-run-starter: venv
-	@echo "Running starter files..."
-	@echo "========================"
-	@echo ""
-	@echo "Running NumPy basics..."
-	@$(PYTHON_VENV) 01-numpy/01_arrays_basics.py
-	@echo ""
-	@echo "Running Pandas basics..."
-	@$(PYTHON_VENV) 02-pandas/01_series_dataframes.py
-	@echo ""
-	@echo "Starter files completed!"
-
-run-module: venv
-	@if [ -z "$(MODULE)" ]; then \
-		echo "Error: MODULE not specified"; \
-		echo "Usage: make run-module MODULE=01-numpy"; \
-		exit 1; \
-	fi
-	@if [ ! -d "$(MODULE)" ]; then \
-		echo "Error: Module '$(MODULE)' not found"; \
-		echo "Available modules: 01-numpy, 02-pandas, 03-visualization, 04-data-cleaning, 05-statistical-analysis, 06-ml-basics, 07-projects"; \
-		exit 1; \
-	fi
-	@echo "Running all files in $(MODULE)..."
-	@echo "=================================="
-	@for file in $(MODULE)/*.py; do \
-		echo ""; \
-		echo "Running $$file..."; \
-		echo "----------------------------------------"; \
-		$(PYTHON_VENV) $$file || true; \
-		echo ""; \
-	done
-	@echo "Module $(MODULE) completed!"
-
-run-projects: venv
-	@echo "Running project files..."
-	@echo "========================"
-	@for file in 07-projects/*.py; do \
-		echo ""; \
-		echo "Running $$file..."; \
-		echo "----------------------------------------"; \
-		$(PYTHON_VENV) $$file || true; \
-		echo ""; \
-	done
-
-list:
-	@echo "Phase 5 Modules:"
-	@echo "================"
-	@for dir in 0*-*/; do \
-		echo ""; \
-		echo "$$dir"; \
-		ls $$dir*.py 2>/dev/null | sed 's/^/  - /' || true; \
-	done
+	@echo "From classwork/: python3 01_hello_world.py"
+	@echo "From homework/:  python3 01_hello_world.py"
 
 clean:
 	@echo "Cleaning Python cache files..."
 	find . -type d -name "__pycache__" -exec rm -rf {} + 2>/dev/null || true
 	find . -type f -name "*.pyc" -delete
 	find . -type f -name "*.pyo" -delete
-	find . -type f -name "*.pyd" -delete
-	find . -type f -name ".DS_Store" -delete
-	find . -type d -name ".ipynb_checkpoints" -exec rm -rf {} + 2>/dev/null || true
 	@echo "Clean complete!"
 
-clean-all: clean
-	@echo "Removing virtual environment..."
-	rm -rf $(VENV)
-	@echo "Full clean complete!"
+classwork:
+	@echo "Running classwork programs..."
+	@echo "=============================="
+	@for file in $(sort $(CLASSWORK_SAMPLES)); do \
+		echo ""; \
+		echo "Running $$file..."; \
+		$(PYTHON) $$file || exit 1; \
+	done
+	@echo "Classwork complete!"
 
-test: venv
-	@echo "Running tests (starter files)..."
-	@$(PYTHON_VENV) 01-numpy/01_arrays_basics.py > /dev/null && echo "✓ NumPy starter passed"
-	@$(PYTHON_VENV) 02-pandas/01_series_dataframes.py > /dev/null && echo "✓ Pandas starter passed"
-	@echo "All tests passed!"
+homework:
+	@echo "Running homework programs..."
+	@echo "=============================="
+	@for file in $(sort $(HOMEWORK_SAMPLES)); do \
+		echo ""; \
+		echo "Running $$file..."; \
+		$(PYTHON) $$file || exit 1; \
+	done
+	@echo "Homework complete!"
+
+both: classwork homework
+
+test: classwork
+	@echo "Classwork tests passed!"
+
+test-homework: homework
+	@echo "Homework tests passed!"
+
+list:
+	@echo "Classwork files:"
+	@for file in $(sort $(CLASSWORK_SAMPLES)); do echo "  - $$file"; done
+	@if [ -n "$(CLASSWORK_PROJECTS)" ]; then \
+		echo ""; \
+		echo "Classwork projects:"; \
+		for file in $(sort $(CLASSWORK_PROJECTS)); do echo "  - $$file"; done; \
+	fi
+	@echo ""
+	@echo "Homework files:"
+	@for file in $(sort $(HOMEWORK_SAMPLES)); do echo "  - $$file"; done
+	@if [ -n "$(HOMEWORK_PROJECTS)" ]; then \
+		echo ""; \
+		echo "Homework projects:"; \
+		for file in $(sort $(HOMEWORK_PROJECTS)); do echo "  - $$file"; done; \
+	fi
