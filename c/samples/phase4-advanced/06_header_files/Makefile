@@ -35,6 +35,7 @@ run: $(TARGET)
 clean:
 	@echo "Cleaning up..."
 	rm -f $(OBJS) $(TARGET)
+	-rm -rf *.dSYM
 	@echo "Clean complete!"
 
 # Phony targets (not actual files)

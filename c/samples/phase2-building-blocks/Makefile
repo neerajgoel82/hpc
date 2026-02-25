@@ -42,6 +42,7 @@ command_line_args: 07_command_line_args.c
 # Clean up executables
 clean:
 	rm -f $(PROGS)
+	-rm -rf *.dSYM
 
 # Test target - build and run all programs
 test: all

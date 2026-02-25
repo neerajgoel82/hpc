@@ -28,6 +28,7 @@ text_analyzer: 02_text_analyzer.c
 clean:
 	rm -f $(PROGS)
 	rm -f contacts.dat *.txt.bak
+	-rm -rf *.dSYM
 
 # Test target - build and run all programs
 test: all

@@ -37,6 +37,7 @@ queue: 05_queue.c
 clean:
 	rm -f $(PROGS)
 	rm -f test_output.txt output.txt
+	-rm -rf *.dSYM
 
 # Test target - build and run all programs
 test: all

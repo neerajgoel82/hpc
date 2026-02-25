@@ -41,6 +41,7 @@ clean:
 		echo "Cleaning $$phase..."; \
 		$(MAKE) -C $$phase clean; \
 	done
+	-find . -name '*.dSYM' -type d -exec rm -rf {} +
 	@echo "=== Clean Complete! ==="
 
 # Test all phases

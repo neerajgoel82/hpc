@@ -39,6 +39,7 @@ enums_unions: 06_enums_unions.c
 # Clean up executables
 clean:
 	rm -f $(PROGS)
+	-rm -rf *.dSYM
 
 # Test target - build and run all programs
 test: all

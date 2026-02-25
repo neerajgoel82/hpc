@@ -45,6 +45,7 @@ bitwise_operators: 08_bitwise_operators.c
 # Clean up executables
 clean:
 	rm -f $(PROGS)
+	-rm -rf *.dSYM
 
 # Test target - build and run all programs
 test: all
