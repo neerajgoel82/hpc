@@ -382,7 +382,7 @@ drive.mount('/content/drive')
 !git clone https://github.com/your-username/hpc.git
 
 # Navigate and run
-%cd hpc/cuda/samples/colab/notebooks/phase1
+%cd hpc/cuda/samples/colab/phase1
 ```
 
 ---
@@ -534,13 +534,13 @@ If you encounter issues:
 ## Next Steps
 
 1. **Verify GPU access**: Run `!nvidia-smi` in Colab
-2. **Open first notebook**: Upload `notebooks/phase1/01_hello_world.ipynb`
+2. **Open first notebook**: Upload `phase1/01_hello_world.ipynb`
 3. **Enable GPU runtime**: Runtime → Change runtime type → GPU
 4. **Run all cells**: Runtime → Run all
 5. **Continue to next**: Follow the phases sequentially
 
 ---
 
-**Ready to start?** Open `notebooks/phase1/01_hello_world.ipynb` in Google Colab! 🚀
+**Ready to start?** Open `phase1/01_hello_world.ipynb` in Google Colab! 🚀
 
 **No GPU? No problem!** Start learning CUDA today, completely free! 💯
