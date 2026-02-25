@@ -1,21 +1,25 @@
-# Makefile for Phase 8
-NVCC = nvcc
-NVCC_FLAGS = -arch=sm_70 -O2
-TARGETS = 01_nbody
+# Phase Makefile - delegates to classwork/ and homework/
+CLASSWORK_DIR = classwork
+HOMEWORK_DIR = homework
 
-all: $(TARGETS)
+all: classwork
 
-%: %.cu
-	$(NVCC) $(NVCC_FLAGS) $< -o $@
+classwork:
+	$(MAKE) -C $(CLASSWORK_DIR)
+
+homework:
+	$(MAKE) -C $(HOMEWORK_DIR)
+
+both: classwork homework
 
 clean:
-	rm -f $(TARGETS)
+	$(MAKE) -C $(CLASSWORK_DIR) clean
+	$(MAKE) -C $(HOMEWORK_DIR) clean
 
-test: all
-	@for target in $(TARGETS); do \
-		echo "=== Running $$target ===" ; \
-		./$$target || exit 1; \
-		echo ""; \
-	done
+test: classwork
+	$(MAKE) -C $(CLASSWORK_DIR) test
 
-.PHONY: all clean test
+test-homework: homework
+	$(MAKE) -C $(HOMEWORK_DIR) test
+
+.PHONY: all classwork homework both clean test test-homework

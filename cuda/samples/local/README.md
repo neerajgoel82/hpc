@@ -11,11 +11,16 @@
 nvcc --version
 nvidia-smi
 
-# 2. Compile and run first program
-cd phase1
-nvcc 01_hello_world.cu -o hello && ./hello
+# 2. Build and run (classwork = reference programs; homework = your exercises)
+make                    # build all classwork in every phase
+cd phase1 && make test  # build and run phase1 classwork
 
-# 3. Follow the phases sequentially
+# Or build/run a single program
+cd phase1
+make classwork          # build classwork/*.cu
+./classwork/01_hello_world
+
+# 3. Follow the phases sequentially (classwork first, then homework)
 ```
 
 ---
@@ -90,8 +95,8 @@ source ~/.bashrc
 nvcc --version
 nvidia-smi
 
-# Test compile
-nvcc phase1/01_hello_world.cu -o test && ./test
+# Test compile (from local/)
+make -C phase1 classwork && phase1/classwork/01_hello_world
 ```
 
 ---
@@ -140,26 +145,29 @@ test.exe
 
 ## Directory Structure
 
+Each phase has **classwork** (reference programs) and **homework** (exercise stubs). Build with `make` (classwork) or `make both` (classwork + homework).
+
 ```
 local/
+├── Makefile            # all, both, clean, test, test-homework
 ├── README.md           # This file
 │
-├── phase1/            # 7 programs - Foundations
-│   ├── 01_hello_world.cu
-│   ├── 02_device_query.cu
-│   └── ...
+├── phase1/             # Foundations
+│   ├── Makefile        # classwork, homework, both, test, test-homework
+│   ├── classwork/      # 01_hello_world.cu, 02_device_query.cu, ...
+│   └── homework/       # Exercise stubs (implement based on classwork)
 │
-├── phase2/            # 7 programs - Memory Management
-├── phase3/            # 9 programs - Optimization
-├── phase4/            # 7 programs - Advanced Memory
-├── phase5/            # 7 programs - Advanced Algorithms
-├── phase6/            # 7 programs - Streams & Concurrency
-├── phase7/            # 6 programs - Performance Engineering
-├── phase8/            # 10 programs - Real Applications
-└── phase9/            # 7 programs - Modern CUDA
+├── phase2/             # Memory Management
+├── phase3/             # Optimization
+├── phase4/             # Advanced Memory
+├── phase5/             # Advanced Algorithms
+├── phase6/             # Streams & Concurrency
+├── phase7/             # Performance Engineering
+├── phase8/             # Real Applications
+└── phase9/             # Modern CUDA
 ```
 
-**Total**: 67 CUDA programs across 9 phases
+**Total**: 67 CUDA programs across 9 phases (classwork + matching homework stubs)
 
 ---
 
@@ -227,8 +235,7 @@ Choose the right `-arch` flag for your GPU:
 
 **Find your GPU's capability**:
 ```bash
-cd phase1
-nvcc 02_device_query.cu -o query && ./query
+cd phase1 && make classwork && ./classwork/02_device_query
 ```
 
 ---
@@ -243,8 +250,8 @@ nvcc 02_device_query.cu -o query && ./query
 **Compile & Run**:
 ```bash
 cd phase1
-nvcc 03_vector_add.cu -o vector_add
-./vector_add
+make classwork
+./classwork/03_vector_add
 ```
 
 ### Phase 2: Memory Management (Week 3-4)
@@ -545,4 +552,4 @@ If you encounter issues:
 
 ---
 
-**Ready to start?** Verify your installation and compile `phase1/01_hello_world.cu`! 🚀
+**Ready to start?** Verify your installation and run `make -C phase1 classwork && phase1/classwork/01_hello_world`. 🚀
