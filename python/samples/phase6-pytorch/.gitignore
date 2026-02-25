@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# PyTorch Models
+*.pt
+*.pth
+*.onnx
+checkpoints/
+saved_models/
+
+# TensorBoard
+runs/
+logs/
+
+# Data
+data/
+datasets/
+*.csv
+*.json
+
+# Except sample data
+!sample_data/
+
+# Images
+*.png
+*.jpg
+*.jpeg
+!assets/*.png
+!assets/*.jpg
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Weights
+*.weights
+*.caffemodel

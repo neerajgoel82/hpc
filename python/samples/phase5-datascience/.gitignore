@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# Data files (too large for git)
+*.csv
+*.xlsx
+*.xls
+*.json
+*.parquet
+*.h5
+*.hdf5
+
+# Except sample datasets
+!datasets/*.csv
+!datasets/*.xlsx
+
+# Model files
+*.pkl
+*.pickle
+*.joblib
+*.model
+
+# Plots
+*.png
+*.jpg
+*.jpeg
+*.pdf
+plots/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
