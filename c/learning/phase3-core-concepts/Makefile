@@ -1,77 +1,55 @@
 # Phase 3: Core Concepts - Makefile
-# Compiles all C programs in this phase
+# Compiles C programs in classwork and homework folders
 
 CC = gcc
 CFLAGS = -std=c11 -Wall -Wextra -O2 -g
 LDFLAGS = -lm
 
+# Directories
+CLASSWORK_DIR = classwork
+HOMEWORK_DIR = homework
+
 # Source files
-SRCS = $(wildcard *.c)
-# Executables (remove .c extension)
-PROGS = $(SRCS:.c=)
+CLASSWORK_SRCS = $(wildcard $(CLASSWORK_DIR)/*.c)
+HOMEWORK_SRCS = $(wildcard $(HOMEWORK_DIR)/*.c)
 
-# Default target: build all programs
-all: $(PROGS)
+# Executables
+CLASSWORK_PROGS = $(CLASSWORK_SRCS:.c=)
+HOMEWORK_PROGS = $(HOMEWORK_SRCS:.c=)
 
-# Rule to build each program
-%: %.c
+# Default target
+all: classwork
+
+classwork: $(CLASSWORK_PROGS)
+	@echo "Phase 3 classwork programs built successfully"
+
+homework: $(HOMEWORK_PROGS)
+	@echo "Phase 3 homework programs built successfully"
+
+both: classwork homework
+
+$(CLASSWORK_DIR)/%: $(CLASSWORK_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
-# Individual program targets for convenience
-pointers_basics: 01_pointers_basics.c
+$(HOMEWORK_DIR)/%: $(HOMEWORK_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
-pointers_arrays: 02_pointers_arrays.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-pointers_functions: 03_pointers_functions.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-structures: 04_structures.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-dynamic_memory: 05_dynamic_memory.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-enums_unions: 06_enums_unions.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-# Clean up executables
 clean:
-	rm -f $(PROGS)
-	-rm -rf *.dSYM
+	rm -f $(CLASSWORK_PROGS) $(HOMEWORK_PROGS)
+	-rm -rf $(CLASSWORK_DIR)/*.dSYM $(HOMEWORK_DIR)/*.dSYM
 
-# Test target - build and run all programs
-test: all
-	@echo "=== Testing Phase 3 Programs ==="
-	@for prog in $(PROGS); do \
+test: classwork
+	@echo "=== Testing Phase 3 Classwork Programs ==="
+	@for prog in $(CLASSWORK_PROGS); do \
 		echo "\n--- Running $$prog ---"; \
 		./$$prog || echo "$$prog failed"; \
 	done
 
-# Memory check with valgrind (if available)
-memcheck: dynamic_memory
-	@echo "=== Memory Check with Valgrind ==="
-	@if command -v valgrind >/dev/null 2>&1; then \
-		valgrind --leak-check=full ./dynamic_memory; \
-	else \
-		echo "Valgrind not installed. Install with: brew install valgrind (macOS) or apt install valgrind (Linux)"; \
-	fi
+memcheck: classwork
+	@echo "=== Memory Check Phase 3 ==="
+	@for prog in $(CLASSWORK_PROGS); do \
+		echo "\n--- Checking $$prog ---"; \
+		valgrind --leak-check=full ./$$prog 2>&1 | grep -E "ERROR SUMMARY|lost"; \
+	done
 
-# Help target
-help:
-	@echo "Phase 3: Core Concepts - Makefile"
-	@echo ""
-	@echo "Available targets:"
-	@echo "  make           - Build all programs"
-	@echo "  make all       - Build all programs"
-	@echo "  make <program> - Build specific program (e.g., make pointers_basics)"
-	@echo "  make test      - Build and run all programs"
-	@echo "  make memcheck  - Check for memory leaks (requires valgrind)"
-	@echo "  make clean     - Remove all executables"
-	@echo "  make help      - Show this help message"
-	@echo ""
-	@echo "Programs:"
-	@echo "  $(PROGS)"
-
-.PHONY: all clean test memcheck help
+.PHONY: all classwork homework both clean test memcheck help

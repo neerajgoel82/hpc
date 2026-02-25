@@ -4,12 +4,30 @@
 # Phases
 PHASES = phase1-foundations phase2-building-blocks phase3-core-concepts phase4-advanced phase5-projects
 
-# Default target: build all phases
+# Default target: build all classwork
 all:
-	@echo "=== Building All C Samples ==="
+	@echo "=== Building All C Classwork ==="
+	@for phase in $(PHASES); do \
+		echo "\n--- Building $$phase classwork ---"; \
+		$(MAKE) -C $$phase classwork || exit 1; \
+	done
+	@echo "\n=== Build Complete! ==="
+
+# Build all homework
+homework:
+	@echo "=== Building All C Homework ==="
+	@for phase in $(PHASES); do \
+		echo "\n--- Building $$phase homework ---"; \
+		$(MAKE) -C $$phase homework || exit 1; \
+	done
+	@echo "\n=== Homework Build Complete! ==="
+
+# Build both classwork and homework
+both:
+	@echo "=== Building All Classwork and Homework ==="
 	@for phase in $(PHASES); do \
 		echo "\n--- Building $$phase ---"; \
-		$(MAKE) -C $$phase all || exit 1; \
+		$(MAKE) -C $$phase both || exit 1; \
 	done
 	@echo "\n=== Build Complete! ==="
 
@@ -87,22 +105,29 @@ list:
 
 # Help target
 help:
-	@echo "C Samples - Root Makefile"
+	@echo "C Learning - Root Makefile"
 	@echo ""
 	@echo "Available targets:"
-	@echo "  make              - Build all samples in all phases"
-	@echo "  make all          - Build all samples in all phases"
-	@echo "  make phase1       - Build only Phase 1 samples"
-	@echo "  make phase2       - Build only Phase 2 samples"
-	@echo "  make phase3       - Build only Phase 3 samples"
-	@echo "  make phase4       - Build only Phase 4 samples"
-	@echo "  make phase5       - Build only Phase 5 samples"
-	@echo "  make test         - Build and test all phases"
+	@echo "  make              - Build all classwork in all phases"
+	@echo "  make all          - Build all classwork in all phases"
+	@echo "  make homework     - Build all homework in all phases"
+	@echo "  make both         - Build both classwork and homework"
+	@echo "  make phase1       - Build Phase 1 classwork"
+	@echo "  make phase2       - Build Phase 2 classwork"
+	@echo "  make phase3       - Build Phase 3 classwork"
+	@echo "  make phase4       - Build Phase 4 classwork"
+	@echo "  make phase5       - Build Phase 5 classwork"
+	@echo "  make test         - Build and test all classwork"
 	@echo "  make memcheck     - Run valgrind on phases with dynamic memory"
 	@echo "  make clean        - Remove all executables from all phases"
 	@echo "  make stats        - Show code statistics"
 	@echo "  make list         - List all programs"
 	@echo "  make help         - Show this help message"
+	@echo ""
+	@echo "Structure:"
+	@echo "  Each phase contains:"
+	@echo "    classwork/  - Learning examples with concepts explained"
+	@echo "    homework/   - Exercise files for practice"
 	@echo ""
 	@echo "Phases:"
 	@echo "  Phase 1: Foundations (Weeks 1-3)"
@@ -114,4 +139,4 @@ help:
 	@echo "For phase-specific help, run: make -C <phase> help"
 	@echo "Example: make -C phase1-foundations help"
 
-.PHONY: all phase1 phase2 phase3 phase4 phase5 clean test memcheck stats list help
+.PHONY: all homework both phase1 phase2 phase3 phase4 phase5 clean test memcheck stats list help

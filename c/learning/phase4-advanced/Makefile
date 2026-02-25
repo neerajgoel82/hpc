@@ -1,80 +1,60 @@
 # Phase 4: Advanced Topics - Makefile
-# Compiles all C programs in this phase
+# Compiles C programs in classwork and homework folders
 
 CC = gcc
 CFLAGS = -std=c11 -Wall -Wextra -O2 -g
 LDFLAGS = -lm
 
+# Directories
+CLASSWORK_DIR = classwork
+HOMEWORK_DIR = homework
+
 # Source files
-SRCS = $(wildcard *.c)
-# Executables (remove .c extension)
-PROGS = $(SRCS:.c=)
+CLASSWORK_SRCS = $(wildcard $(CLASSWORK_DIR)/*.c)
+HOMEWORK_SRCS = $(wildcard $(HOMEWORK_DIR)/*.c)
 
-# Default target: build all programs
-all: $(PROGS)
+# Executables
+CLASSWORK_PROGS = $(CLASSWORK_SRCS:.c=)
+HOMEWORK_PROGS = $(HOMEWORK_SRCS:.c=)
 
-# Rule to build each program
-%: %.c
+# Default target
+all: classwork header_files
+
+classwork: $(CLASSWORK_PROGS)
+	@echo "Phase 4 classwork programs built successfully"
+
+homework: $(HOMEWORK_PROGS)
+	@echo "Phase 4 homework programs built successfully"
+
+header_files:
+	@echo "Building header files example..."
+	@$(MAKE) -C $(CLASSWORK_DIR)/06_header_files all 2>/dev/null || true
+
+both: classwork homework header_files
+
+$(CLASSWORK_DIR)/%: $(CLASSWORK_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
-# Individual program targets for convenience
-file_io: 01_file_io.c
+$(HOMEWORK_DIR)/%: $(HOMEWORK_DIR)/%.c
 	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
 
-preprocessor: 02_preprocessor.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-linked_list: 03_linked_list.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-stack: 04_stack.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-queue: 05_queue.c
-	$(CC) $(CFLAGS) $< -o $@ $(LDFLAGS)
-
-# Clean up executables and test files
 clean:
-	rm -f $(PROGS)
-	rm -f test_output.txt output.txt
-	-rm -rf *.dSYM
+	rm -f $(CLASSWORK_PROGS) $(HOMEWORK_PROGS)
+	-rm -rf $(CLASSWORK_DIR)/*.dSYM $(HOMEWORK_DIR)/*.dSYM
+	@$(MAKE) -C $(CLASSWORK_DIR)/06_header_files clean 2>/dev/null || true
 
-# Test target - build and run all programs
-test: all
-	@echo "=== Testing Phase 4 Programs ==="
-	@for prog in $(PROGS); do \
+test: classwork
+	@echo "=== Testing Phase 4 Classwork Programs ==="
+	@for prog in $(CLASSWORK_PROGS); do \
 		echo "\n--- Running $$prog ---"; \
 		./$$prog || echo "$$prog failed"; \
 	done
 
-# Memory check with valgrind (critical for data structures)
-memcheck: linked_list stack queue
-	@echo "=== Memory Check with Valgrind ==="
-	@if command -v valgrind >/dev/null 2>&1; then \
-		echo "\n--- Checking linked_list ---"; \
-		valgrind --leak-check=full ./linked_list; \
-		echo "\n--- Checking stack ---"; \
-		valgrind --leak-check=full ./stack; \
-		echo "\n--- Checking queue ---"; \
-		valgrind --leak-check=full ./queue; \
-	else \
-		echo "Valgrind not installed. Install with: brew install valgrind (macOS) or apt install valgrind (Linux)"; \
-	fi
+memcheck: classwork
+	@echo "=== Memory Check Phase 4 ==="
+	@for prog in $(CLASSWORK_PROGS); do \
+		echo "\n--- Checking $$prog ---"; \
+		valgrind --leak-check=full ./$$prog 2>&1 | grep -E "ERROR SUMMARY|lost"; \
+	done
 
-# Help target
-help:
-	@echo "Phase 4: Advanced Topics - Makefile"
-	@echo ""
-	@echo "Available targets:"
-	@echo "  make           - Build all programs"
-	@echo "  make all       - Build all programs"
-	@echo "  make <program> - Build specific program (e.g., make linked_list)"
-	@echo "  make test      - Build and run all programs"
-	@echo "  make memcheck  - Check for memory leaks in data structures"
-	@echo "  make clean     - Remove all executables and test files"
-	@echo "  make help      - Show this help message"
-	@echo ""
-	@echo "Programs:"
-	@echo "  $(PROGS)"
-
-.PHONY: all clean test memcheck help
+.PHONY: all classwork homework both header_files clean test memcheck help
