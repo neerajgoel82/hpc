@@ -1,52 +1,67 @@
-# Module 03: Pointers and Memory Management - Makefile
-# Compiles all C++ programs in this module
+# Module 03 - Makefile
+# Builds C++ programs in classwork and homework folders
 
 CXX = g++
 CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -g
-LDFLAGS =
+LDFLAGS =  Pointers and Memory
+
+# Directories
+CLASSWORK_DIR = classwork
+HOMEWORK_DIR = homework
 
 # Source files
-SRCS = $(wildcard *.cpp)
-# Executables (remove .cpp extension)
-PROGS = $(SRCS:.cpp=)
+CLASSWORK_SRCS = $(wildcard $(CLASSWORK_DIR)/*.cpp)
+HOMEWORK_SRCS = $(wildcard $(HOMEWORK_DIR)/*.cpp)
 
-# Default target: build all programs
-all: $(PROGS)
+# Executables
+CLASSWORK_PROGS = $(CLASSWORK_SRCS:.cpp=)
+HOMEWORK_PROGS = $(HOMEWORK_SRCS:.cpp=)
 
-# Rule to build each program
-%: %.cpp
+# Default target: build classwork
+all: classwork
+
+classwork: $(CLASSWORK_PROGS)
+	@echo "Module 03 classwork programs built"
+
+homework: $(HOMEWORK_PROGS)
+	@echo "Module 03 homework programs built"
+
+both: classwork homework
+
+$(CLASSWORK_DIR)/%: $(CLASSWORK_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 
-# Clean up executables
-clean:
-	rm -f $(PROGS)
-	-rm -rf *.dSYM
+$(HOMEWORK_DIR)/%: $(HOMEWORK_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 
-# Run all programs
-run: all
-	@echo "=== Running Module 03 Programs ==="
-	@for prog in $(PROGS); do \
+clean:
+	rm -f $(CLASSWORK_PROGS) $(HOMEWORK_PROGS)
+	-rm -rf $(CLASSWORK_DIR)/*.dSYM $(HOMEWORK_DIR)/*.dSYM
+
+test: classwork
+	@echo "=== Testing Module 03 Classwork ==="
+	@for prog in $(CLASSWORK_PROGS); do \
 		echo "\n--- Running $$prog ---"; \
 		./$$prog || echo "$$prog failed"; \
 	done
 
-# Test target (same as run for this module)
-test: run
+test-homework: homework
+	@echo "=== Testing Module 03 Homework ==="
+	@for prog in $(HOMEWORK_PROGS); do \
+		echo "\n--- Running $$prog ---"; \
+		./$$prog || echo "$$prog failed"; \
+	done
 
-# Help target
 help:
-	@echo "Module 03: Pointers and Memory Management - Makefile"
+	@echo "Module 03 - Makefile"
 	@echo ""
 	@echo "Available targets:"
-	@echo "  make           - Build all programs"
-	@echo "  make all       - Build all programs"
-	@echo "  make <program> - Build specific program (without extension)"
-	@echo "  make run       - Build and run all programs"
-	@echo "  make test      - Build and test all programs"
-	@echo "  make clean     - Remove all executables"
-	@echo "  make help      - Show this help message"
-	@echo ""
-	@echo "Programs in this module:"
-	@echo "  $(PROGS)" | tr ' ' '\n' | grep -v "^$$"
+	@echo "  make              - Build classwork"
+	@echo "  make classwork    - Build classwork"
+	@echo "  make homework     - Build homework"
+	@echo "  make both         - Build both"
+	@echo "  make test         - Test classwork"
+	@echo "  make test-homework- Test homework"
+	@echo "  make clean        - Remove executables"
 
-.PHONY: all clean run test help
+.PHONY: all classwork homework both clean test test-homework help

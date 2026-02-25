@@ -1,80 +1,67 @@
-# MODULE 12: Build Systems
-# File: Makefile
-#
-# TOPIC: Makefile for Building C++ Projects
-#
-# USAGE:
-#   make          - Build all targets
-#   make clean    - Remove build artifacts
-#   make run      - Build and run
-#   make debug    - Build with debug symbols
+# Module 12 - Makefile
+# Builds C++ programs in classwork and homework folders
 
-# Compiler and flags
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra
-DEBUGFLAGS = -g -O0
-RELEASEFLAGS = -O3 -DNDEBUG
+CXXFLAGS = -std=c++17 -Wall -Wextra -O2 -g
+LDFLAGS =  Build Systems and Debugging
 
 # Directories
-SRCDIR = src
-OBJDIR = obj
-BINDIR = bin
+CLASSWORK_DIR = classwork
+HOMEWORK_DIR = homework
 
 # Source files
-SOURCES = $(wildcard $(SRCDIR)/*.cpp)
-OBJECTS = $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+CLASSWORK_SRCS = $(wildcard $(CLASSWORK_DIR)/*.cpp)
+HOMEWORK_SRCS = $(wildcard $(HOMEWORK_DIR)/*.cpp)
 
-# Target executable
-TARGET = $(BINDIR)/myapp
+# Executables
+CLASSWORK_PROGS = $(CLASSWORK_SRCS:.cpp=)
+HOMEWORK_PROGS = $(HOMEWORK_SRCS:.cpp=)
 
-# Default target
-all: $(TARGET)
+# Default target: build classwork
+all: classwork
 
-# Link
-$(TARGET): $(OBJECTS) | $(BINDIR)
-	$(CXX) $(CXXFLAGS) $(OBJECTS) -o $@
-	@echo "Build complete: $(TARGET)"
+classwork: $(CLASSWORK_PROGS)
+	@echo "Module 12 classwork programs built"
 
-# Compile
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
-	$(CXX) $(CXXFLAGS) $(RELEASEFLAGS) -c $< -o $@
+homework: $(HOMEWORK_PROGS)
+	@echo "Module 12 homework programs built"
 
-# Debug build
-debug: CXXFLAGS += $(DEBUGFLAGS)
-debug: clean $(TARGET)
+both: classwork homework
 
-# Create directories
-$(OBJDIR):
-	mkdir -p $(OBJDIR)
+$(CLASSWORK_DIR)/%: $(CLASSWORK_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 
-$(BINDIR):
-	mkdir -p $(BINDIR)
+$(HOMEWORK_DIR)/%: $(HOMEWORK_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 
-# Run
-run: $(TARGET)
-	./$(TARGET)
-
-# Clean
 clean:
-	rm -rf $(OBJDIR) $(BINDIR)
-	-rm -rf *.dSYM
-	@echo "Clean complete"
+	rm -f $(CLASSWORK_PROGS) $(HOMEWORK_PROGS)
+	-rm -rf $(CLASSWORK_DIR)/*.dSYM $(HOMEWORK_DIR)/*.dSYM
 
-# Phony targets
-.PHONY: all debug run clean
+test: classwork
+	@echo "=== Testing Module 12 Classwork ==="
+	@for prog in $(CLASSWORK_PROGS); do \
+		echo "\n--- Running $$prog ---"; \
+		./$$prog || echo "$$prog failed"; \
+	done
 
-# GPU example targets
-gpu: gpu_vector_add gpu_matrix_mult
+test-homework: homework
+	@echo "=== Testing Module 12 Homework ==="
+	@for prog in $(HOMEWORK_PROGS); do \
+		echo "\n--- Running $$prog ---"; \
+		./$$prog || echo "$$prog failed"; \
+	done
 
-gpu_vector_add:
-	nvcc -o $(BINDIR)/vector_add $(SRCDIR)/vector_add.cu
+help:
+	@echo "Module 12 - Makefile"
+	@echo ""
+	@echo "Available targets:"
+	@echo "  make              - Build classwork"
+	@echo "  make classwork    - Build classwork"
+	@echo "  make homework     - Build homework"
+	@echo "  make both         - Build both"
+	@echo "  make test         - Test classwork"
+	@echo "  make test-homework- Test homework"
+	@echo "  make clean        - Remove executables"
 
-gpu_matrix_mult:
-	nvcc -o $(BINDIR)/matrix_mult $(SRCDIR)/matrix_mult.cu
-
-# TRY THIS:
-# 1. Add dependency tracking
-# 2. Add separate debug/release directories
-# 3. Add library linking (-lGL -lGLU for OpenGL)
-# 4. Add CUDA compilation rules
-# 5. Add install target
+.PHONY: all classwork homework both clean test test-homework help

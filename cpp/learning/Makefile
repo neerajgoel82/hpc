@@ -17,12 +17,30 @@ MODULES = 01-basics \
           13-gpu-advanced \
           14-gpu-prep
 
-# Default target: build all modules
+# Default target: build all classwork
 all:
-	@echo "=== Building All C++ Samples ==="
+	@echo "=== Building All C++ Classwork ==="
+	@for module in $(MODULES); do \
+		echo "\n--- Building Module $$module classwork ---"; \
+		$(MAKE) -C $$module classwork || exit 1; \
+	done
+	@echo "\n=== Build Complete! ==="
+
+# Build all homework
+homework:
+	@echo "=== Building All C++ Homework ==="
+	@for module in $(MODULES); do \
+		echo "\n--- Building Module $$module homework ---"; \
+		$(MAKE) -C $$module homework || exit 1; \
+	done
+	@echo "\n=== Homework Build Complete! ==="
+
+# Build both classwork and homework
+both:
+	@echo "=== Building All Classwork and Homework ==="
 	@for module in $(MODULES); do \
 		echo "\n--- Building Module $$module ---"; \
-		$(MAKE) -C $$module all || exit 1; \
+		$(MAKE) -C $$module both || exit 1; \
 	done
 	@echo "\n=== Build Complete! ==="
 
@@ -175,19 +193,26 @@ help:
 	@echo "C++ Samples - Root Makefile"
 	@echo ""
 	@echo "Available targets:"
-	@echo "  make              - Build all samples in all modules"
-	@echo "  make all          - Build all samples in all modules"
+	@echo "  make              - Build all classwork in all modules"
+	@echo "  make all          - Build all classwork in all modules"
+	@echo "  make homework     - Build all homework in all modules"
+	@echo "  make both         - Build both classwork and homework"
 	@echo "  make module<N>    - Build specific module (e.g., make module1)"
 	@echo "  make fundamentals - Build Modules 1-3 (basics)"
 	@echo "  make oop          - Build Modules 4-6 (object-oriented)"
 	@echo "  make advanced     - Build Modules 7-10 (advanced features)"
 	@echo "  make parallel     - Build Modules 11-14 (parallel/GPU prep)"
-	@echo "  make test         - Run tests for all modules"
+	@echo "  make test         - Run tests for all classwork"
 	@echo "  make check        - Check if all modules compile"
 	@echo "  make clean        - Remove all executables from all modules"
 	@echo "  make stats        - Show code statistics"
 	@echo "  make list         - List all programs"
 	@echo "  make help         - Show this help message"
+	@echo ""
+	@echo "Structure:"
+	@echo "  Each module contains:"
+	@echo "    classwork/  - Learning examples with concepts explained"
+	@echo "    homework/   - Exercise files for practice"
 	@echo ""
 	@echo "Modules:"
 	@echo "  Module 01: C++ Fundamentals"
@@ -215,6 +240,6 @@ help:
 	@echo "  Parallel (Modules 11-14):   5-6 weeks"
 	@echo "  Total:                      18-24 weeks"
 
-.PHONY: all module1 module2 module3 module4 module5 module6 module7 module8 \
+.PHONY: all homework both module1 module2 module3 module4 module5 module6 module7 module8 \
         module9 module10 module11 module12 module13 module14 \
         fundamentals oop advanced parallel clean test run stats list check help
