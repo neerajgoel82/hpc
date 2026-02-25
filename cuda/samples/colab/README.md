@@ -10,12 +10,12 @@
 
 ```bash
 1. Go to https://colab.research.google.com
-2. Upload a notebook from notebooks/phase1/
+2. Upload a notebook from phase1/
 3. Runtime → Change runtime type → GPU (T4)
 4. Run all cells and start learning!
 ```
 
-**First notebook**: `notebooks/phase1/01_hello_world.ipynb`
+**First notebook**: `phase1/01_hello_world.ipynb`
 
 ---
 
@@ -123,21 +123,20 @@ int main() {
 colab/
 ├── README.md              # This file
 │
-└── notebooks/             # 56 Jupyter notebooks
-    ├── phase1/           # 6 notebooks - Foundations
-    │   ├── 01_hello_world.ipynb
-    │   ├── 02_device_query.ipynb
-    │   ├── 03_vector_add.ipynb
-    │   └── ...
-    │
-    ├── phase2/           # 6 notebooks - Memory Management
-    ├── phase3/           # 6 notebooks - Optimization
-    ├── phase4/           # 6 notebooks - Advanced Memory
-    ├── phase5/           # 6 notebooks - Advanced Algorithms
-    ├── phase6/           # 6 notebooks - Streams & Concurrency
-    ├── phase7/           # 5 notebooks - Performance Engineering
-    ├── phase8/           # 9 notebooks - Real Applications
-    └── phase9/           # 6 notebooks - Modern CUDA
+├── phase1/               # 6 notebooks - Foundations
+│   ├── 01_hello_world.ipynb
+│   ├── 02_device_query.ipynb
+│   ├── 03_vector_add.ipynb
+│   └── ...
+│
+├── phase2/               # 6 notebooks - Memory Management
+├── phase3/               # 6 notebooks - Optimization
+├── phase4/               # 6 notebooks - Advanced Memory
+├── phase5/               # 6 notebooks - Advanced Algorithms
+├── phase6/               # 6 notebooks - Streams & Concurrency
+├── phase7/               # 5 notebooks - Performance Engineering
+├── phase8/               # 9 notebooks - Real Applications
+└── phase9/               # 6 notebooks - Modern CUDA
 ```
 
 ---
