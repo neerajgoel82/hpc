@@ -103,6 +103,7 @@ clean:
 		echo "Cleaning $$module..."; \
 		$(MAKE) -C $$module clean 2>/dev/null || true; \
 	done
+	-find . -name '*.dSYM' -type d -exec rm -rf {} +
 	@echo "=== Clean Complete! ==="
 
 # Test all modules (if test targets exist)

@@ -57,6 +57,7 @@ run: $(TARGET)
 # Clean
 clean:
 	rm -rf $(OBJDIR) $(BINDIR)
+	-rm -rf *.dSYM
 	@echo "Clean complete"
 
 # Phony targets

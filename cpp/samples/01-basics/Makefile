@@ -48,6 +48,7 @@ all: $(PROGS)
 # Clean up executables
 clean:
 	rm -f $(PROGS)
+	-rm -rf *.dSYM
 
 # Run all programs
 run: all
