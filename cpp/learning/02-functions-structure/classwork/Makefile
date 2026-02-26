@@ -7,12 +7,19 @@ LDFLAGS =
 
 # Source files
 SRCS = $(wildcard *.cpp)
+# Exclude implementation files (not standalone programs)
+IMPL_FILES = math_utils.cpp
+MAIN_SRCS = $(filter-out $(IMPL_FILES), $(SRCS))
 # Executables (remove .cpp extension)
-PROGS = $(SRCS:.cpp=)
+PROGS = $(MAIN_SRCS:.cpp=)
 
 # Default target: build all programs
 all: $(PROGS)
 	@echo "All classwork programs built successfully"
+
+# Special rule for multi-file programs
+04_header_example_main: 04_header_example_main.cpp math_utils.cpp
+	$(CXX) $(CXXFLAGS) 04_header_example_main.cpp math_utils.cpp -o $@ $(LDFLAGS)
 
 # Rule to build each program
 %: %.cpp
