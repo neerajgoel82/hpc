@@ -13,8 +13,12 @@ HOMEWORK_DIR = homework
 CLASSWORK_SRCS = $(wildcard $(CLASSWORK_DIR)/*.cpp)
 HOMEWORK_SRCS = $(wildcard $(HOMEWORK_DIR)/*.cpp)
 
+# Exclude implementation files (not standalone programs)
+CLASSWORK_IMPL_FILES = $(CLASSWORK_DIR)/math_utils.cpp
+CLASSWORK_MAIN_SRCS = $(filter-out $(CLASSWORK_IMPL_FILES), $(CLASSWORK_SRCS))
+
 # Executables
-CLASSWORK_PROGS = $(CLASSWORK_SRCS:.cpp=)
+CLASSWORK_PROGS = $(CLASSWORK_MAIN_SRCS:.cpp=)
 HOMEWORK_PROGS = $(HOMEWORK_SRCS:.cpp=)
 
 # Default target: build classwork
@@ -28,6 +32,11 @@ homework: $(HOMEWORK_PROGS)
 
 both: classwork homework
 
+# Special rule for multi-file programs
+$(CLASSWORK_DIR)/04_header_example_main: $(CLASSWORK_DIR)/04_header_example_main.cpp $(CLASSWORK_DIR)/math_utils.cpp
+	$(CXX) $(CXXFLAGS) $(CLASSWORK_DIR)/04_header_example_main.cpp $(CLASSWORK_DIR)/math_utils.cpp -o $@ $(LDFLAGS)
+
+# General rule for single-file programs
 $(CLASSWORK_DIR)/%: $(CLASSWORK_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) $< -o $@ $(LDFLAGS)
 

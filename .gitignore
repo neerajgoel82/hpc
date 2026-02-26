@@ -305,15 +305,32 @@ _templates/
 # Custom Project Specific - Compiled Binaries
 # ============================================
 
-# C/C++/CUDA Compiled Executables
-# Ignore compiled binaries (files without extensions) in sample directories
-# while keeping source files, Makefiles, and READMEs
+# Classwork and homework folders: ignore build outputs (executables, .o, .dSYM)
+# but keep source files and Makefile/README
+**/classwork/**
+**/homework/**
+# Re-include source and docs under classwork
+!**/classwork/**/*.c
+!**/classwork/**/*.cpp
+!**/classwork/**/*.cu
+!**/classwork/**/*.py
+!**/classwork/**/*.h
+!**/classwork/**/*.hpp
+!**/classwork/**/*.cuh
+!**/classwork/**/Makefile
+!**/classwork/**/README.md
+# Re-include source and docs under homework
+!**/homework/**/*.c
+!**/homework/**/*.cpp
+!**/homework/**/*.cu
+!**/homework/**/*.py
+!**/homework/**/*.h
+!**/homework/**/*.hpp
+!**/homework/**/*.cuh
+!**/homework/**/Makefile
+!**/homework/**/README.md
 
-# Pattern: Ignore files without extensions that start with numbers
-# This catches: 01_hello_world, 02_functions, etc.
-# But keeps: 01_hello_world.c, 01_hello_world.cpp, Makefile, README.md
-
-# C samples - compiled executables
+# Legacy: C/C++/CUDA samples (flat phase dirs) - compiled executables
 c/samples/phase*/01_*
 c/samples/phase*/02_*
 c/samples/phase*/03_*
@@ -322,12 +339,9 @@ c/samples/phase*/05_*
 c/samples/phase*/06_*
 c/samples/phase*/07_*
 c/samples/phase*/08_*
-
-# But keep source files
 !c/samples/**/*.c
 !c/samples/**/*.h
 
-# C++ samples - compiled executables
 cpp/samples/*/01_*
 cpp/samples/*/02_*
 cpp/samples/*/03_*
@@ -338,13 +352,10 @@ cpp/samples/*/07_*
 cpp/samples/*/08_*
 cpp/samples/*/09_*
 cpp/samples/*/math_utils
-
-# But keep source files
 !cpp/samples/**/*.cpp
 !cpp/samples/**/*.hpp
 !cpp/samples/**/*.h
 
-# CUDA samples - compiled executables
 cuda/samples/local/*/01_*
 cuda/samples/local/*/02_*
 cuda/samples/local/*/03_*
@@ -359,8 +370,6 @@ cuda/samples/local/*/2*_*
 cuda/samples/local/*/3*_*
 cuda/samples/local/*/4*_*
 cuda/samples/local/*/5*_*
-
-# But keep source files
 !cuda/samples/**/*.cu
 !cuda/samples/**/*.cuh
 
