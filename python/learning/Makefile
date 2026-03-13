@@ -1,7 +1,7 @@
 .PHONY: help clean clean-all install-phase5 install-phase6 test-all list-all
 
 PYTHON := python3
-PHASES := phase1-foundations phase2-intermediate phase3-oop phase4-advanced phase5-datascience phase6-pytorch
+PHASES := 01-foundations 02-intermediate 03-oop 04-advanced 05-datascience 06-pytorch
 
 help:
 	@echo "Python Samples - Master Makefile"
@@ -37,18 +37,18 @@ help:
 	@echo ""
 	@echo "Quick Start Examples:"
 	@echo "  make install-phase5"
-	@echo "  cd phase5-datascience && make run-starter"
+	@echo "  cd 05-datascience && make run-starter"
 	@echo ""
 	@echo "  make install-phase6-gpu"
-	@echo "  cd phase6-pytorch && make check-cuda"
+	@echo "  cd 06-pytorch && make check-cuda"
 	@echo ""
 	@echo "Available Phases:"
-	@echo "  1. phase1-foundations     - Python basics"
-	@echo "  2. phase2-intermediate    - Functions, file I/O, exceptions"
-	@echo "  3. phase3-oop             - Object-oriented programming"
-	@echo "  4. phase4-advanced        - Advanced Python features"
-	@echo "  5. phase5-datascience     - NumPy, Pandas, ML (6-8 weeks)"
-	@echo "  6. phase6-pytorch         - Deep Learning with PyTorch (8-10 weeks)"
+	@echo "  1. 01-foundations     - Python basics"
+	@echo "  2. 02-intermediate    - Functions, file I/O, exceptions"
+	@echo "  3. 03-oop             - Object-oriented programming"
+	@echo "  4. 04-advanced        - Advanced Python features"
+	@echo "  5. 05-datascience     - NumPy, Pandas, ML (6-8 weeks)"
+	@echo "  6. 06-pytorch         - Deep Learning with PyTorch (8-10 weeks)"
 	@echo ""
 	@echo "For detailed phase commands, cd into the phase directory and run 'make help'"
 
@@ -96,38 +96,38 @@ deep-clean:
 install-phase5:
 	@echo "Setting up Phase 5: Data Science"
 	@echo "================================="
-	@if [ ! -d "phase5-datascience" ]; then \
-		echo "Error: phase5-datascience directory not found"; \
+	@if [ ! -d "05-datascience" ]; then \
+		echo "Error: 05-datascience directory not found"; \
 		exit 1; \
 	fi
-	@cd phase5-datascience && $(MAKE) --no-print-directory install
+	@cd 05-datascience && $(MAKE) --no-print-directory install
 	@echo ""
 	@echo "Phase 5 setup complete!"
-	@echo "Try: cd phase5-datascience && make run-starter"
+	@echo "Try: cd 05-datascience && make run-starter"
 
 install-phase6-cpu:
 	@echo "Setting up Phase 6: PyTorch (CPU)"
 	@echo "=================================="
-	@if [ ! -d "phase6-pytorch" ]; then \
-		echo "Error: phase6-pytorch directory not found"; \
+	@if [ ! -d "06-pytorch" ]; then \
+		echo "Error: 06-pytorch directory not found"; \
 		exit 1; \
 	fi
-	@cd phase6-pytorch && $(MAKE) --no-print-directory install-cpu
+	@cd 06-pytorch && $(MAKE) --no-print-directory install-cpu
 	@echo ""
 	@echo "Phase 6 (CPU) setup complete!"
-	@echo "Try: cd phase6-pytorch && make run-starter"
+	@echo "Try: cd 06-pytorch && make run-starter"
 
 install-phase6-gpu:
 	@echo "Setting up Phase 6: PyTorch (GPU)"
 	@echo "=================================="
-	@if [ ! -d "phase6-pytorch" ]; then \
-		echo "Error: phase6-pytorch directory not found"; \
+	@if [ ! -d "06-pytorch" ]; then \
+		echo "Error: 06-pytorch directory not found"; \
 		exit 1; \
 	fi
-	@cd phase6-pytorch && $(MAKE) --no-print-directory install-gpu
+	@cd 06-pytorch && $(MAKE) --no-print-directory install-gpu
 	@echo ""
 	@echo "Phase 6 (GPU) setup complete!"
-	@echo "Try: cd phase6-pytorch && make check-cuda"
+	@echo "Try: cd 06-pytorch && make check-cuda"
 
 test-all:
 	@echo "Running tests in all phases..."
@@ -144,22 +144,22 @@ test-all:
 	@echo "All tests completed!"
 
 phase1:
-	@cd phase1-foundations && $(MAKE) --no-print-directory help
+	@cd 01-foundations && $(MAKE) --no-print-directory help
 
 phase2:
-	@cd phase2-intermediate && $(MAKE) --no-print-directory help
+	@cd 02-intermediate && $(MAKE) --no-print-directory help
 
 phase3:
-	@cd phase3-oop && $(MAKE) --no-print-directory help
+	@cd 03-oop && $(MAKE) --no-print-directory help
 
 phase4:
-	@cd phase4-advanced && $(MAKE) --no-print-directory help
+	@cd 04-advanced && $(MAKE) --no-print-directory help
 
 phase5:
-	@cd phase5-datascience && $(MAKE) --no-print-directory help
+	@cd 05-datascience && $(MAKE) --no-print-directory help
 
 phase6:
-	@cd phase6-pytorch && $(MAKE) --no-print-directory help
+	@cd 06-pytorch && $(MAKE) --no-print-directory help
 
 # Statistics target
 stats:
@@ -191,9 +191,9 @@ quick-ref:
 	@echo "  For Phase 6:   make install-phase6-cpu (or -gpu)"
 	@echo ""
 	@echo "RUNNING SAMPLES:"
-	@echo "  Phase 1-4:  cd phase1-foundations && python3 01_hello_world.py"
-	@echo "  Phase 5:    cd phase5-datascience && make run-module MODULE=01-numpy"
-	@echo "  Phase 6:    cd phase6-pytorch && make run-module MODULE=01-pytorch-basics"
+	@echo "  Phase 1-4:  cd 01-foundations && python3 01_hello_world.py"
+	@echo "  Phase 5:    cd 05-datascience && make run-module MODULE=01-numpy"
+	@echo "  Phase 6:    cd 06-pytorch && make run-module MODULE=01-pytorch-basics"
 	@echo ""
 	@echo "USEFUL COMMANDS:"
 	@echo "  make stats       - Show file counts per phase"

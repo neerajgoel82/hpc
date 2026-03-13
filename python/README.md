@@ -6,7 +6,7 @@ Learn Python programming from fundamentals through advanced topics, with focus o
 
 ```
 python/
-├── samples/          # Learning samples organized by phases
+├── learning/         # Learning samples organized by phases
 ├── projects/         # Complete Python applications
 ├── notebooks/        # Python-related notebooks (if needed)
 └── requirements.txt  # Python dependencies
@@ -308,10 +308,10 @@ jupyter lab
 
 ## Resources
 
-- **[samples/LEARNING_PATH.md](samples/LEARNING_PATH.md)** - Complete Python curriculum from basics to specialization
-- **[samples/GETTING_STARTED.md](samples/GETTING_STARTED.md)** - Setup and environment configuration
-- **[samples/QUICK_REFERENCE.md](samples/QUICK_REFERENCE.md)** - Quick syntax and feature reference
-- **samples/README.md** - Overview of the sample structure
+- **[learning/LEARNING_PATH.md](learning/LEARNING_PATH.md)** - Complete Python curriculum from basics to specialization
+- **[learning/GETTING_STARTED.md](learning/GETTING_STARTED.md)** - Setup and environment configuration
+- **[learning/QUICK_REFERENCE.md](learning/QUICK_REFERENCE.md)** - Quick syntax and feature reference
+- **learning/README.md** - Overview of the sample structure
 - Phase-specific directories contain focused examples with TODOs
 
 ## Sample Count

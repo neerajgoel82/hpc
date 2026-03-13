@@ -59,7 +59,7 @@ sudo apt-get install python3 python3-pip
 
 ```bash
 # Navigate to samples directory
-cd phase1-foundations
+cd 01-foundations
 
 # Run hello world
 python3 01_hello_world.py
@@ -84,20 +84,20 @@ python3 01_hello_world.py
 
 ```
 python/samples/
-├── phase1-foundations/       # Weeks 1-3: Basics
+├── 01-foundations/       # Weeks 1-3: Basics
 │   ├── 01_hello_world.py
 │   ├── 02_variables.py
 │   ├── ...
 │   └── projects/
-├── phase2-intermediate/      # Weeks 4-6: Functions, Files, Modules
+├── 02-intermediate/      # Weeks 4-6: Functions, Files, Modules
 │   ├── 01_functions.py
 │   ├── ...
 │   └── projects/
-├── phase3-oop/              # Weeks 7-8: Object-Oriented Programming
+├── 03-oop/              # Weeks 7-8: Object-Oriented Programming
 │   ├── 01_classes.py
 │   ├── ...
 │   └── projects/
-├── phase4-advanced/         # Weeks 9-11: Advanced concepts
+├── 04-advanced/         # Weeks 9-11: Advanced concepts
 │   ├── 01_iterators.py
 │   ├── ...
 │   └── projects/
@@ -1039,4 +1039,4 @@ pip3 install -r requirements.txt  # Install from file
 
 **Cross-Language Learning**: Compare Python implementations with C/C++/CUDA versions in this repository to understand performance trade-offs.
 
-Ready to start? Head to `phase1-foundations/` now!
+Ready to start? Head to `01-foundations/` now!
