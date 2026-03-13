@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 // Basic building blocks
 class Vec3 {
