@@ -1005,6 +1005,70 @@ pip3 freeze             # Export requirements
 pip3 install -r requirements.txt  # Install from file
 ```
 
+## Environment Setup
+
+### Basic Setup (Phase 1-4)
+
+```bash
+make setup          # Create virtual environment
+make test-syntax    # Verify all files have valid syntax
+```
+
+### Phase 5: Data Science
+
+```bash
+make install-phase5  # Install numpy, pandas, scikit-learn, etc.
+```
+
+### Phase 6: PyTorch
+
+**CPU-only (development):**
+```bash
+make install-phase6-cpu
+```
+
+**GPU with CUDA (production):**
+```bash
+make install-phase6-gpu  # Auto-detects CUDA version
+make check-cuda          # Verify GPU availability
+```
+
+**Device-agnostic code:** All PyTorch scripts automatically use GPU if available, CPU otherwise. No code changes needed between machines!
+
+---
+
+## Managing Output Files
+
+Scripts generate various output files (models, plots, datasets). These are automatically ignored by git.
+
+### Generated Files
+
+- `data/` - Downloaded datasets (MNIST, CIFAR, etc.)
+- `runs/` - TensorBoard logs
+- `checkpoints/` - Trained models
+- `*.png`, `*.jpg` - Generated plots
+- `*.pth`, `*.pt` - Model weights
+
+### Cleanup
+
+```bash
+make clean-outputs  # Remove all generated files
+```
+
+This removes:
+- Image files
+- Model checkpoints
+- Downloaded datasets
+- TensorBoard logs
+
+**Note:** Scripts will re-download datasets as needed.
+
+### Git Status
+
+All output files are in `.gitignore`, so `git status` stays clean. Focus on code, not generated artifacts.
+
+---
+
 ## What's Next After This Curriculum?
 
 ### Continue Learning

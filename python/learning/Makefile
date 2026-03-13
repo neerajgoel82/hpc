@@ -1,4 +1,4 @@
-.PHONY: help clean clean-all setup install-phase5 install-phase6 test test-syntax test-all list-all
+.PHONY: help clean clean-all setup install-phase5 install-phase6 test test-syntax test-all list-all check-cuda clean-outputs
 
 VENV_DIR := .venv
 PYTHON := $(shell if [ -f $(VENV_DIR)/bin/python ]; then echo $(VENV_DIR)/bin/python; else echo python3; fi)
@@ -19,6 +19,7 @@ help:
 	@echo "  make both-all       - Run both classwork and homework"
 	@echo "  make list-all       - List all phases and their contents"
 	@echo "  make clean-all      - Clean all phases (cache files only)"
+	@echo "  make clean-outputs  - Remove generated files (models, images, data)"
 	@echo "  make deep-clean     - Clean all phases including virtual environments"
 	@echo ""
 	@echo "Structure:"
@@ -27,9 +28,10 @@ help:
 	@echo "    homework/   - Exercise files for practice"
 	@echo ""
 	@echo "Phase-Specific Setup:"
-	@echo "  make install-phase5 - Setup Phase 5 (Data Science) with dependencies"
+	@echo "  make install-phase5     - Setup Phase 5 (Data Science) with dependencies"
 	@echo "  make install-phase6-cpu - Setup Phase 6 (PyTorch CPU)"
-	@echo "  make install-phase6-gpu - Setup Phase 6 (PyTorch GPU)"
+	@echo "  make install-phase6-gpu - Setup Phase 6 (PyTorch GPU with CUDA)"
+	@echo "  make check-cuda         - Check CUDA availability for GPU training"
 	@echo ""
 	@echo "Phase-Specific Commands:"
 	@echo "  make phase1         - Run Phase 1 help"
@@ -144,6 +146,46 @@ install-phase6-gpu:
 	@echo ""
 	@echo "Phase 6 (GPU) setup complete!"
 	@echo "Try: cd 06-pytorch && make check-cuda"
+
+check-cuda:
+	@echo "Checking CUDA availability..."
+	@echo "=============================="
+	@if [ ! -d "06-pytorch" ]; then \
+		echo "Error: 06-pytorch directory not found"; \
+		exit 1; \
+	fi
+	@cd 06-pytorch && $(MAKE) --no-print-directory check-cuda
+
+clean-outputs:
+	@echo "Cleaning generated output files..."
+	@echo "==================================="
+	@echo ""
+	@echo "Removing:"
+	@echo "  - Image files (*.png, *.jpg, *.jpeg, *.gif)"
+	@echo "  - Model files (*.pth, *.pt, *.ckpt)"
+	@echo "  - Pickle files (*.pkl)"
+	@echo "  - Directories: data/, runs/, checkpoints/, outputs/"
+	@echo ""
+	@read -p "Continue? [y/N] " -n 1 -r; \
+	echo; \
+	if [[ $$REPLY =~ ^[Yy]$$ ]]; then \
+		echo "Cleaning..."; \
+		find . -maxdepth 1 -name "*.png" -delete; \
+		find . -maxdepth 1 -name "*.jpg" -delete; \
+		find . -maxdepth 1 -name "*.jpeg" -delete; \
+		find . -maxdepth 1 -name "*.gif" -delete; \
+		find . -maxdepth 1 -name "*.pth" -delete; \
+		find . -maxdepth 1 -name "*.pt" -delete; \
+		find . -maxdepth 1 -name "*.ckpt" -delete; \
+		find . -maxdepth 1 -name "*.pkl" -delete; \
+		rm -rf data/ runs/ checkpoints/ outputs/ checkpoints_demo/; \
+		echo ""; \
+		echo "✓ Output files cleaned!"; \
+		echo ""; \
+		echo "Note: Scripts will auto-download datasets when needed"; \
+	else \
+		echo "Cancelled."; \
+	fi
 
 test-all:
 	@echo "Running tests in all phases..."

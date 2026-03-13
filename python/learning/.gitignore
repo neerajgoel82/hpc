@@ -135,6 +135,8 @@ dmypy.json
 *.csv
 *.txt
 !requirements.txt
+!requirements-base.txt
+!requirements-*.txt
 *.db
 *.sqlite
 
@@ -143,3 +145,25 @@ my_progress.md
 my_projects/
 test.py
 scratch.py
+
+# Training outputs and generated data
+outputs/
+data/
+runs/
+checkpoints/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.pth
+*.pt
+*.ckpt
+*.pkl
+*.pickle
+*.h5
+*.hdf5
+
+# Exclude specific documentation images if needed
+!docs/**/*.png
+!docs/**/*.jpg
+!**/README_images/*.png

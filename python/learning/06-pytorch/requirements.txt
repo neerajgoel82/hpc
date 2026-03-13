@@ -1,9 +1,24 @@
 # Phase 6: PyTorch Dependencies
+#
+# NOTE: Do NOT use this file directly for installation!
+# Use Makefile targets instead to ensure correct CUDA version:
+#   make install-cpu    - For CPU-only machines
+#   make install-gpu    - For GPU machines with CUDA
+#
+# The Makefile will install PyTorch separately with the correct
+# CUDA version, then install other dependencies from requirements-base.txt
 
 # Core PyTorch
-torch>=2.1.0
-torchvision>=0.16.0
-torchaudio>=2.1.0
+# Installed separately by Makefile to ensure CUDA compatibility
+# Minimum versions:
+#   torch>=2.1.0
+#   torchvision>=0.16.0
+#   torchaudio>=2.1.0
+#
+# CUDA Compatibility:
+#   PyTorch 2.1+: Compatible with CUDA 11.8, 12.1+
+#   Auto-detects system CUDA and installs compatible version
+#   Includes CUDA runtime libraries (no separate CUDA install needed)
 
 # Training & Monitoring
 tensorboard>=2.15.0

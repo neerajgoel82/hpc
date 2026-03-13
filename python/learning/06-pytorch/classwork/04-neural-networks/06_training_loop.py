@@ -277,7 +277,7 @@ def demonstrate_learning_rate_scheduling():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=0.01)  # Higher initial LR
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=2, verbose=True
+        optimizer, mode='min', factor=0.5, patience=2
     )
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)

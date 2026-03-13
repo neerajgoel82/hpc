@@ -577,6 +577,79 @@ See `09-custom-models/07_cuda_integration.py` for PyTorch-CUDA integration.
 
 ---
 
+## GPU Setup and CUDA
+
+### Installation
+
+**CPU-only (development/learning):**
+```bash
+cd .. && make install-phase6-cpu
+```
+
+**GPU with CUDA (training/production):**
+```bash
+cd .. && make install-phase6-gpu
+```
+
+The GPU installation:
+- Auto-detects your CUDA version
+- Installs PyTorch with compatible CUDA libraries (~2-3GB)
+- Supports CUDA 11.8, 12.1, 12.4
+- No separate CUDA installation needed!
+
+### Verification
+
+```bash
+# Check CUDA availability
+make check-cuda
+
+# Or manually
+python -c "import torch; print(f'CUDA: {torch.cuda.is_available()}')"
+```
+
+### Device-Agnostic Code
+
+All scripts automatically use GPU if available:
+```python
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+model.to(device)
+data = data.to(device)
+```
+
+**Same code works on both CPU and GPU machines!**
+
+### Requirements
+
+- **CPU:** Any machine with Python 3.8+
+- **GPU:** NVIDIA GPU + driver 450+ (CUDA 11.8) or 525+ (CUDA 12.1)
+- **Compute Capability:** 3.5 or higher
+
+### CUDA Compatibility
+
+| PyTorch | CUDA | Driver (Linux) | Driver (Windows) |
+|---------|------|----------------|------------------|
+| 2.1+    | 11.8 | 450.80+       | 452.39+         |
+| 2.1+    | 12.1 | 525.60+       | 528.33+         |
+
+PyTorch includes CUDA runtime, so no separate CUDA toolkit needed!
+
+### Troubleshooting
+
+**CUDA not available after installation:**
+1. Check driver: `nvidia-smi`
+2. Check PyTorch version: `python -c "import torch; print(torch.__version__)"`
+   - Should show `+cu118` or `+cu121` for GPU support
+3. Reinstall if needed: `pip uninstall torch torchvision torchaudio && make install-gpu`
+
+**Out of memory:**
+- Reduce batch size
+- Delete unused tensors: `del x; torch.cuda.empty_cache()`
+- Use gradient checkpointing
+
+See `classwork/01-pytorch-basics/05_gpu_acceleration.py` for more details.
+
+---
+
 ## Next Steps
 
 After completing Phase 6:
