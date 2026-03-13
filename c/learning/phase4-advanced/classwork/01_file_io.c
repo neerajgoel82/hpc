@@ -162,7 +162,11 @@ int main() {
         return 1;
     }
 
-    fwrite(numbers, sizeof(int), 5, bin_file);
+    if (fwrite(numbers, sizeof(int), 5, bin_file) != 5) {
+        fprintf(stderr, "Error: Failed to write binary data\n");
+        fclose(bin_file);
+        return 1;
+    }
     fclose(bin_file);
     printf("Binary data written\n");
 
@@ -174,7 +178,11 @@ int main() {
         return 1;
     }
 
-    fread(read_numbers, sizeof(int), 5, bin_file);
+    if (fread(read_numbers, sizeof(int), 5, bin_file) != 5) {
+        fprintf(stderr, "Error: Failed to read binary data\n");
+        fclose(bin_file);
+        return 1;
+    }
     fclose(bin_file);
 
     printf("Numbers read from binary file: ");
