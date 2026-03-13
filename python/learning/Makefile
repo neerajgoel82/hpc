@@ -42,11 +42,17 @@ help:
 	@echo "  make phase6         - Run Phase 6 help"
 	@echo ""
 	@echo "Quick Start Examples:"
-	@echo "  make install-phase5"
-	@echo "  cd 05-datascience && make run-starter"
+	@echo "  # Basic setup (Phase 1-4 only)"
+	@echo "  make setup"
+	@echo "  make test              # Tests Phase 1-4 (Phase 5-6 skipped)"
 	@echo ""
-	@echo "  make install-phase6-gpu"
-	@echo "  cd 06-pytorch && make check-cuda"
+	@echo "  # Add Phase 5 (Data Science)"
+	@echo "  make install-phase5"
+	@echo "  make test              # Now tests Phase 1-5"
+	@echo ""
+	@echo "  # Add Phase 6 (PyTorch)"
+	@echo "  make install-phase6-cpu   # or install-phase6-gpu"
+	@echo "  make test              # Now tests all phases"
 	@echo ""
 	@echo "Available Phases:"
 	@echo "  1. 01-foundations     - Python basics"
@@ -205,6 +211,20 @@ test:
 	@echo "Executing all Python files..."
 	@echo "======================================"
 	@echo ""
+	@echo "Checking dependencies..."
+	@has_numpy=$$($(PYTHON) -c "import numpy" 2>/dev/null && echo "yes" || echo "no"); \
+	has_torch=$$($(PYTHON) -c "import torch" 2>/dev/null && echo "yes" || echo "no"); \
+	if [ "$$has_numpy" = "no" ]; then \
+		echo "⚠ Warning: Phase 5 (Data Science) dependencies not installed"; \
+		echo "  Install with: make install-phase5"; \
+		echo "  Phase 5 files will be skipped"; \
+	fi; \
+	if [ "$$has_torch" = "no" ]; then \
+		echo "⚠ Warning: Phase 6 (PyTorch) dependencies not installed"; \
+		echo "  Install with: make install-phase6-cpu (or install-phase6-gpu)"; \
+		echo "  Phase 6 files will be skipped"; \
+	fi; \
+	echo ""
 	@echo "Note: Files requiring input or missing dependencies may fail"
 	@echo ""
 	@failed=0; \
