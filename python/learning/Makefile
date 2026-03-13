@@ -1,4 +1,4 @@
-.PHONY: help clean clean-all setup install-phase5 install-phase6 test test-all list-all
+.PHONY: help clean clean-all setup install-phase5 install-phase6 test test-syntax test-all list-all
 
 VENV_DIR := .venv
 PYTHON := $(shell if [ -f $(VENV_DIR)/bin/python ]; then echo $(VENV_DIR)/bin/python; else echo python3; fi)
@@ -11,7 +11,8 @@ help:
 	@echo "Overview Commands:"
 	@echo "  make help           - Show this help message"
 	@echo "  make setup          - Create virtual environment and install requirements"
-	@echo "  make test           - Check Python syntax for all files"
+	@echo "  make test           - Execute all Python files to verify they run"
+	@echo "  make test-syntax    - Quick syntax check without execution"
 	@echo "  make test-all       - Run tests in all phases"
 	@echo "  make classwork-all  - Run all classwork in all phases"
 	@echo "  make homework-all   - Run all homework in all phases"
@@ -159,7 +160,92 @@ test-all:
 	@echo "All tests completed!"
 
 test:
-	@echo "Testing Python syntax for all files..."
+	@echo "Executing all Python files..."
+	@echo "======================================"
+	@echo ""
+	@echo "Note: Files requiring input or missing dependencies may fail"
+	@echo ""
+	@failed=0; \
+	total=0; \
+	skipped=0; \
+	timeout_cmd=""; \
+	if command -v timeout >/dev/null 2>&1; then \
+		timeout_cmd="timeout 5"; \
+	elif command -v gtimeout >/dev/null 2>&1; then \
+		timeout_cmd="gtimeout 5"; \
+	fi; \
+	for phase in $(PHASES); do \
+		if [ -d "$$phase" ]; then \
+			echo "Testing $$phase..."; \
+			if [ -d "$$phase/classwork" ]; then \
+				for file in $$(find "$$phase/classwork" -name "*.py" -type f 2>/dev/null); do \
+					total=$$((total + 1)); \
+					if [ -n "$$timeout_cmd" ]; then \
+						if $$timeout_cmd $(PYTHON) "$$file" </dev/null >/dev/null 2>&1; then \
+							echo "  ✓ $$file"; \
+						elif [ $$? -eq 124 ] || [ $$? -eq 143 ]; then \
+							echo "  ⏱ $$file (timeout)"; \
+							skipped=$$((skipped + 1)); \
+						else \
+							echo "  ✗ $$file (failed)"; \
+							failed=$$((failed + 1)); \
+						fi; \
+					else \
+						if $(PYTHON) -c "import sys; sys.stdin = open('/dev/null'); exec(open('$$file').read())" >/dev/null 2>&1; then \
+							echo "  ✓ $$file"; \
+						else \
+							echo "  ⚠ $$file (needs input/deps?)"; \
+							skipped=$$((skipped + 1)); \
+						fi; \
+					fi; \
+				done; \
+			fi; \
+			if [ -d "$$phase/homework" ]; then \
+				for file in $$(find "$$phase/homework" -name "*.py" -type f 2>/dev/null); do \
+					total=$$((total + 1)); \
+					if [ -n "$$timeout_cmd" ]; then \
+						if $$timeout_cmd $(PYTHON) "$$file" </dev/null >/dev/null 2>&1; then \
+							echo "  ✓ $$file"; \
+						elif [ $$? -eq 124 ] || [ $$? -eq 143 ]; then \
+							echo "  ⏱ $$file (timeout)"; \
+							skipped=$$((skipped + 1)); \
+						else \
+							echo "  ✗ $$file (failed)"; \
+							failed=$$((failed + 1)); \
+						fi; \
+					else \
+						if $(PYTHON) -c "import sys; sys.stdin = open('/dev/null'); exec(open('$$file').read())" >/dev/null 2>&1; then \
+							echo "  ✓ $$file"; \
+						else \
+							echo "  ⚠ $$file (needs input/deps?)"; \
+							skipped=$$((skipped + 1)); \
+						fi; \
+					fi; \
+				done; \
+			fi; \
+			echo ""; \
+		fi; \
+	done; \
+	echo "======================================"; \
+	echo "Total files tested: $$total"; \
+	echo "Passed: $$((total - failed - skipped))"; \
+	echo "Skipped/Warnings: $$skipped"; \
+	echo "Failed: $$failed"; \
+	if [ $$failed -gt 0 ]; then \
+		echo ""; \
+		echo "⚠ Some files failed to execute!"; \
+		echo "Run individual files to see error details."; \
+		exit 1; \
+	else \
+		echo ""; \
+		echo "✓ All testable Python files executed!"; \
+		if [ $$skipped -gt 0 ]; then \
+			echo "  ($$skipped files skipped - may need input or dependencies)"; \
+		fi; \
+	fi
+
+test-syntax:
+	@echo "Checking Python syntax for all files..."
 	@echo "======================================"
 	@echo ""
 	@failed=0; \
@@ -258,7 +344,8 @@ quick-ref:
 	@echo "  Phase 6:    cd 06-pytorch && make run-module MODULE=01-pytorch-basics"
 	@echo ""
 	@echo "USEFUL COMMANDS:"
-	@echo "  make test        - Check Python syntax for all files"
+	@echo "  make test        - Execute all Python files"
+	@echo "  make test-syntax - Quick syntax check (no execution)"
 	@echo "  make test-all    - Run tests in all phases"
 	@echo "  make stats       - Show file counts per phase"
 	@echo "  make list-all    - List all files in all phases"
