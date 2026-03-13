@@ -1,4 +1,4 @@
-.PHONY: help clean clean-all install-phase5 install-phase6 test-all list-all
+.PHONY: help clean clean-all install-phase5 install-phase6 test test-all list-all
 
 PYTHON := python3
 PHASES := 01-foundations 02-intermediate 03-oop 04-advanced 05-datascience 06-pytorch
@@ -9,11 +9,12 @@ help:
 	@echo ""
 	@echo "Overview Commands:"
 	@echo "  make help           - Show this help message"
+	@echo "  make test           - Check Python syntax for all files"
+	@echo "  make test-all       - Run tests in all phases"
 	@echo "  make classwork-all  - Run all classwork in all phases"
 	@echo "  make homework-all   - Run all homework in all phases"
 	@echo "  make both-all       - Run both classwork and homework"
 	@echo "  make list-all       - List all phases and their contents"
-	@echo "  make test-all       - Run tests in all phases"
 	@echo "  make clean-all      - Clean all phases (cache files only)"
 	@echo "  make deep-clean     - Clean all phases including virtual environments"
 	@echo ""
@@ -143,6 +144,57 @@ test-all:
 	done
 	@echo "All tests completed!"
 
+test:
+	@echo "Testing Python syntax for all files..."
+	@echo "======================================"
+	@echo ""
+	@failed=0; \
+	total=0; \
+	for phase in $(PHASES); do \
+		if [ -d "$$phase" ]; then \
+			echo "Checking $$phase..."; \
+			if [ -d "$$phase/classwork" ]; then \
+				for file in $$phase/classwork/*.py; do \
+					if [ -f "$$file" ]; then \
+						total=$$((total + 1)); \
+						if $(PYTHON) -m py_compile "$$file" 2>/dev/null; then \
+							echo "  ✓ $$(basename $$file)"; \
+						else \
+							echo "  ✗ $$(basename $$file) - syntax error"; \
+							failed=$$((failed + 1)); \
+						fi; \
+					fi; \
+				done; \
+			fi; \
+			if [ -d "$$phase/homework" ]; then \
+				for file in $$phase/homework/*.py; do \
+					if [ -f "$$file" ]; then \
+						total=$$((total + 1)); \
+						if $(PYTHON) -m py_compile "$$file" 2>/dev/null; then \
+							echo "  ✓ $$(basename $$file)"; \
+						else \
+							echo "  ✗ $$(basename $$file) - syntax error"; \
+							failed=$$((failed + 1)); \
+						fi; \
+					fi; \
+				done; \
+			fi; \
+			echo ""; \
+		fi; \
+	done; \
+	echo "======================================"; \
+	echo "Total files checked: $$total"; \
+	echo "Passed: $$((total - failed))"; \
+	echo "Failed: $$failed"; \
+	if [ $$failed -gt 0 ]; then \
+		echo ""; \
+		echo "Some files have syntax errors!"; \
+		exit 1; \
+	else \
+		echo ""; \
+		echo "All Python files have valid syntax! ✓"; \
+	fi
+
 phase1:
 	@cd 01-foundations && $(MAKE) --no-print-directory help
 
@@ -196,9 +248,10 @@ quick-ref:
 	@echo "  Phase 6:    cd 06-pytorch && make run-module MODULE=01-pytorch-basics"
 	@echo ""
 	@echo "USEFUL COMMANDS:"
+	@echo "  make test        - Check Python syntax for all files"
+	@echo "  make test-all    - Run tests in all phases"
 	@echo "  make stats       - Show file counts per phase"
 	@echo "  make list-all    - List all files in all phases"
-	@echo "  make test-all    - Run tests in all phases"
 	@echo "  make clean-all   - Clean cache files"
 	@echo ""
 	@echo "For phase-specific help: cd <phase-dir> && make help"
