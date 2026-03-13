@@ -280,7 +280,9 @@ int main() {
         CUDA_CHECK(cudaMemcpy(d_data, h_data, bytes, cudaMemcpyHostToDevice));
 
         // Cooperative kernel launch
-        void *args[] = {&d_data, &n, &d_counter};
+        // Create non-const copy of n for kernel args
+        int n_param = n;
+        void *args[] = {&d_data, &n_param, &d_counter};
 
         // Check max blocks for cooperative launch
         int numBlocksPerSm;
