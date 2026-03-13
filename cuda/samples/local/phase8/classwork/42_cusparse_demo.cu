@@ -59,25 +59,39 @@ int main() {
     cusparseHandle_t handle;
     cusparseCreate(&handle);
 
-    // Create matrix descriptor
-    cusparseMatDescr_t descr;
-    cusparseCreateMatDescr(&descr);
-    cusparseSetMatType(descr, CUSPARSE_MATRIX_TYPE_GENERAL);
-    cusparseSetMatIndexBase(descr, CUSPARSE_INDEX_BASE_ZERO);
+    // Create sparse matrix descriptor (modern API)
+    cusparseSpMatDescr_t matA;
+    cusparseCreateCsr(&matA, rows, cols, nnz,
+                      d_csrRowPtr, d_csrColInd, d_csrVal,
+                      CUSPARSE_INDEX_32I, CUSPARSE_INDEX_32I,
+                      CUSPARSE_INDEX_BASE_ZERO, CUDA_R_32F);
 
-    // Sparse matrix-vector multiplication: y = A * x
+    // Create dense vector descriptors
+    cusparseDnVecDescr_t vecX, vecY;
+    cusparseCreateDnVec(&vecX, cols, d_x, CUDA_R_32F);
+    cusparseCreateDnVec(&vecY, rows, d_y, CUDA_R_32F);
+
+    // Sparse matrix-vector multiplication: y = alpha * A * x + beta * y
     float alpha = 1.0f;
     float beta = 0.0f;
+
+    // Allocate buffer for SpMV
+    size_t bufferSize = 0;
+    cusparseSpMV_bufferSize(handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
+                            &alpha, matA, vecX, &beta, vecY, CUDA_R_32F,
+                            CUSPARSE_SPMV_ALG_DEFAULT, &bufferSize);
+
+    void* buffer = NULL;
+    CUDA_CHECK(cudaMalloc(&buffer, bufferSize));
 
     cudaEvent_t start, stop;
     cudaEventCreate(&start);
     cudaEventCreate(&stop);
 
     cudaEventRecord(start);
-    cusparseScsrmv(handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
-                   rows, cols, nnz, &alpha, descr,
-                   d_csrVal, d_csrRowPtr, d_csrColInd,
-                   d_x, &beta, d_y);
+    cusparseSpMV(handle, CUSPARSE_OPERATION_NON_TRANSPOSE,
+                 &alpha, matA, vecX, &beta, vecY, CUDA_R_32F,
+                 CUSPARSE_SPMV_ALG_DEFAULT, buffer);
     cudaEventRecord(stop);
     cudaEventSynchronize(stop);
 
@@ -98,8 +112,11 @@ int main() {
     printf("\nComputation time: %.3f ms\n", ms);
 
     // Cleanup
-    cusparseDestroyMatDescr(descr);
+    cusparseDestroySpMat(matA);
+    cusparseDestroyDnVec(vecX);
+    cusparseDestroyDnVec(vecY);
     cusparseDestroy(handle);
+    cudaFree(buffer);
     cudaFree(d_csrRowPtr);
     cudaFree(d_csrColInd);
     cudaFree(d_csrVal);

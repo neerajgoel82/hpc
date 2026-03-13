@@ -1,7 +1,7 @@
 # Homework - build all .cu in this directory
 NVCC = nvcc
 NVCC_FLAGS = -arch=sm_70 -O2
-LIBS = -lcufft
+LIBS = -lcufft -lcusparse
 
 SRCS = $(wildcard *.cu)
 PROGS = $(SRCS:.cu=)
