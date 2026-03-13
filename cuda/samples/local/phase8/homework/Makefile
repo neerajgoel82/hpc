@@ -1,13 +1,19 @@
 # Homework - build all .cu in this directory
 NVCC = nvcc
 NVCC_FLAGS = -arch=sm_70 -O2
-LIBS = -lcufft -lcusparse -lcurand -lcutensor
+LIBS = -lcufft -lcusparse -lcurand
 
 SRCS = $(wildcard *.cu)
+# Exclude cuTENSOR sample if library not installed
+SRCS := $(filter-out 61_cutensor_basics.cu, $(SRCS))
 PROGS = $(SRCS:.cu=)
 
 all: $(PROGS)
 	@echo "Homework programs built successfully"
+
+# Special rule for cuTENSOR (only if library installed)
+61_cutensor_basics: 61_cutensor_basics.cu
+	$(NVCC) $(NVCC_FLAGS) $< -o $@ $(LIBS) -lcutensor
 
 %: %.cu
 	$(NVCC) $(NVCC_FLAGS) $< -o $@ $(LIBS)
