@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <chrono>
+#include <cmath>
 
 // ===== Inline Function =====
 // Hint to compiler to replace function call with function body

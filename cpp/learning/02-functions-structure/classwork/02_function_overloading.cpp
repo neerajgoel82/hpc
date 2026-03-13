@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <cmath>
 
 // ===== Basic Overloading =====
 // Different number of parameters
