@@ -13,15 +13,13 @@
         } \
     } while(0)
 
-
-texture<float, cudaTextureType2D, cudaReadModeElementType> texRef;
-
-__global__ void textureKernel(float* output, int width, int height) {
+// Modern texture object API (CUDA 11+)
+__global__ void textureKernel(cudaTextureObject_t texObj, float* output, int width, int height) {
     int x = blockIdx.x * blockDim.x + threadIdx.x;
     int y = blockIdx.y * blockDim.y + threadIdx.y;
 
     if (x < width && y < height) {
-        float value = tex2D(texRef, x + 0.5f, y + 0.5f);
+        float value = tex2D<float>(texObj, x + 0.5f, y + 0.5f);
         output[y * width + x] = value;
     }
 }
@@ -42,23 +40,33 @@ int main() {
     CUDA_CHECK(cudaMallocArray(&cuArray, &channelDesc, WIDTH, HEIGHT));
     CUDA_CHECK(cudaMemcpyToArray(cuArray, 0, 0, h_input, bytes, cudaMemcpyHostToDevice));
 
-    texRef.addressMode[0] = cudaAddressModeClamp;
-    texRef.addressMode[1] = cudaAddressModeClamp;
-    texRef.filterMode = cudaFilterModeLinear;
-    texRef.normalized = false;
+    // Create texture object
+    cudaResourceDesc resDesc;
+    memset(&resDesc, 0, sizeof(resDesc));
+    resDesc.resType = cudaResourceTypeArray;
+    resDesc.res.array.array = cuArray;
 
-    CUDA_CHECK(cudaBindTextureToArray(texRef, cuArray, channelDesc));
+    cudaTextureDesc texDesc;
+    memset(&texDesc, 0, sizeof(texDesc));
+    texDesc.addressMode[0] = cudaAddressModeClamp;
+    texDesc.addressMode[1] = cudaAddressModeClamp;
+    texDesc.filterMode = cudaFilterModeLinear;
+    texDesc.readMode = cudaReadModeElementType;
+    texDesc.normalizedCoords = false;
+
+    cudaTextureObject_t texObj = 0;
+    CUDA_CHECK(cudaCreateTextureObject(&texObj, &resDesc, &texDesc, NULL));
 
     dim3 threads(16, 16);
     dim3 blocks((WIDTH + 15) / 16, (HEIGHT + 15) / 16);
 
-    textureKernel<<<blocks, threads>>>(d_output, WIDTH, HEIGHT);
+    textureKernel<<<blocks, threads>>>(texObj, d_output, WIDTH, HEIGHT);
     CUDA_CHECK(cudaDeviceSynchronize());
 
     printf("Texture memory kernel executed successfully\n");
     printf("Benefits: cached, hardware interpolation, good for 2D access\n");
 
-    CUDA_CHECK(cudaUnbindTexture(texRef));
+    CUDA_CHECK(cudaDestroyTextureObject(texObj));
     CUDA_CHECK(cudaFreeArray(cuArray));
     free(h_input);
     cudaFree(d_output);
