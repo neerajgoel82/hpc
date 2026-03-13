@@ -48,7 +48,7 @@ Install MinGW or use WSL (Windows Subsystem for Linux)
 cd c/learning
 
 # Compile and run your first program
-gcc -std=c11 -Wall -Wextra phase1-foundations/01_hello_world.c -o hello
+gcc -std=c11 -Wall -Wextra 01-foundations/01_hello_world.c -o hello
 ./hello
 ```
 
@@ -64,7 +64,7 @@ gcc -std=c11 -Wall -Wextra phase1-foundations/01_hello_world.c -o hello
 make phase1
 
 # Run a specific program
-make run FILE=phase1-foundations/01_hello_world.c
+make run FILE=01-foundations/01_hello_world.c
 
 # Compile everything
 make all
@@ -79,7 +79,7 @@ make clean
 
 ```
 c/learning/
-├── phase1-foundations/        # 7 files - Weeks 1-2
+├── 01-foundations/        # 7 files - Weeks 1-2
 │   ├── 01_hello_world.c
 │   ├── 02_data_types.c
 │   ├── 03_operators.c
@@ -88,7 +88,7 @@ c/learning/
 │   ├── 06_switch.c
 │   └── 07_loops.c
 │
-├── phase2-building-blocks/    # 6 files - Weeks 3-5
+├── 02-building-blocks/    # 6 files - Weeks 3-5
 │   ├── 01_functions.c
 │   ├── 02_function_scope.c
 │   ├── 03_recursion.c
@@ -96,21 +96,21 @@ c/learning/
 │   ├── 05_multidimensional_arrays.c
 │   └── 06_strings.c
 │
-├── phase3-core-concepts/      # 5 files - Weeks 6-9
+├── 03-core-concepts/      # 5 files - Weeks 6-9
 │   ├── 01_pointers_basics.c
 │   ├── 02_pointers_arrays.c
 │   ├── 03_pointers_functions.c
 │   ├── 04_structures.c
 │   └── 05_dynamic_memory.c
 │
-├── phase4-advanced/           # 4+ files - Weeks 10-14
+├── 04-advanced/           # 4+ files - Weeks 10-14
 │   ├── 01_file_io.c
 │   ├── 02_preprocessor.c
 │   ├── 03_linked_list.c
 │   ├── 04_stack.c
 │   └── 06_header_files/       # Multi-file project
 │
-├── phase5-projects/           # 2 files - Weeks 15-16
+├── 05-projects/           # 2 files - Weeks 15-16
 │   ├── 01_contact_manager.c
 │   └── 02_text_analyzer.c
 │
@@ -760,7 +760,7 @@ Start your C programming journey today:
 
 1. Verify GCC is installed: `gcc --version`
 2. Navigate to the samples directory
-3. Open `phase1-foundations/01_hello_world.c`
+3. Open `01-foundations/01_hello_world.c`
 4. Read through the file completely
 5. Compile and run: `gcc -std=c11 -Wall 01_hello_world.c -o hello && ./hello`
 6. Try the exercises at the end

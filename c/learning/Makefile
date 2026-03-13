@@ -2,7 +2,7 @@
 # Builds all samples across all phases
 
 # Phases
-PHASES = phase1-foundations phase2-building-blocks phase3-core-concepts phase4-advanced phase5-projects
+PHASES = 01-foundations 02-building-blocks 03-core-concepts 04-advanced 05-projects
 
 # Default target: build all classwork
 all:
@@ -34,23 +34,23 @@ both:
 # Build specific phase
 phase1:
 	@echo "=== Building Phase 1: Foundations ==="
-	$(MAKE) -C phase1-foundations
+	$(MAKE) -C 01-foundations
 
 phase2:
 	@echo "=== Building Phase 2: Building Blocks ==="
-	$(MAKE) -C phase2-building-blocks
+	$(MAKE) -C 02-building-blocks
 
 phase3:
 	@echo "=== Building Phase 3: Core Concepts ==="
-	$(MAKE) -C phase3-core-concepts
+	$(MAKE) -C 03-core-concepts
 
 phase4:
 	@echo "=== Building Phase 4: Advanced Topics ==="
-	$(MAKE) -C phase4-advanced
+	$(MAKE) -C 04-advanced
 
 phase5:
 	@echo "=== Building Phase 5: Real-World Projects ==="
-	$(MAKE) -C phase5-projects
+	$(MAKE) -C 05-projects
 
 # Clean all phases
 clean:
@@ -75,11 +75,11 @@ test:
 memcheck:
 	@echo "=== Memory Check on All Phases ==="
 	@echo "\n--- Phase 3: Core Concepts ---"
-	@$(MAKE) -C phase3-core-concepts memcheck || true
+	@$(MAKE) -C 03-core-concepts memcheck || true
 	@echo "\n--- Phase 4: Advanced Topics ---"
-	@$(MAKE) -C phase4-advanced memcheck || true
+	@$(MAKE) -C 04-advanced memcheck || true
 	@echo "\n--- Phase 5: Projects ---"
-	@$(MAKE) -C phase5-projects memcheck || true
+	@$(MAKE) -C 05-projects memcheck || true
 	@echo "\n=== Memory Check Complete! ==="
 
 # Count lines of code
@@ -137,6 +137,6 @@ help:
 	@echo "  Phase 5: Real-World Projects (Weeks 15-16+)"
 	@echo ""
 	@echo "For phase-specific help, run: make -C <phase> help"
-	@echo "Example: make -C phase1-foundations help"
+	@echo "Example: make -C 01-foundations help"
 
 .PHONY: all homework both phase1 phase2 phase3 phase4 phase5 clean test memcheck stats list help
