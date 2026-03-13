@@ -1,6 +1,8 @@
-.PHONY: help clean classwork homework both test test-homework list
+.PHONY: help clean classwork homework both test test-homework list install-cpu install-gpu install
 
-PYTHON := python3
+VENV_DIR := ../.venv
+PYTHON := $(shell if [ -f $(VENV_DIR)/bin/python ]; then echo $(VENV_DIR)/bin/python; else echo python3; fi)
+PIP := $(shell if [ -f $(VENV_DIR)/bin/pip ]; then echo $(VENV_DIR)/bin/pip; else echo pip3; fi)
 
 # Directories
 CLASSWORK_DIR := classwork
@@ -16,6 +18,8 @@ help:
 	@echo "Phase 6: PyTorch Deep Learning - Makefile Commands"
 	@echo "================================================"
 	@echo "make help         - Show this help message"
+	@echo "make install-cpu  - Install Phase 6 dependencies (CPU-only)"
+	@echo "make install-gpu  - Install Phase 6 dependencies (with GPU support)"
 	@echo "make classwork    - Run all classwork programs"
 	@echo "make homework     - Run all homework programs"
 	@echo "make both         - Run both classwork and homework"
@@ -26,6 +30,51 @@ help:
 	@echo ""
 	@echo "From classwork/: python3 01_hello_world.py"
 	@echo "From homework/:  python3 01_hello_world.py"
+
+install-cpu:
+	@echo "Installing Phase 6: PyTorch (CPU-only) dependencies..."
+	@echo "======================================================="
+	@if [ ! -f "$(VENV_DIR)/bin/python" ]; then \
+		echo "Error: Virtual environment not found at $(VENV_DIR)"; \
+		echo "Run 'make setup' from the parent directory first"; \
+		exit 1; \
+	fi
+	@if [ ! -f "requirements.txt" ]; then \
+		echo "Error: requirements.txt not found"; \
+		exit 1; \
+	fi
+	@echo "Installing PyTorch CPU version and other dependencies..."
+	@echo "(This may take several minutes)"
+	@$(PIP) install -q torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+	@$(PIP) install -q -r requirements.txt
+	@echo ""
+	@echo "✓ Phase 6 (CPU) dependencies installed successfully!"
+	@echo ""
+	@echo "Test installation:"
+	@echo "  $(PYTHON) -c 'import torch; print(f\"PyTorch {torch.__version__}\"); print(f\"CUDA available: {torch.cuda.is_available()}\")'"
+
+install-gpu:
+	@echo "Installing Phase 6: PyTorch (GPU) dependencies..."
+	@echo "==================================================="
+	@if [ ! -f "$(VENV_DIR)/bin/python" ]; then \
+		echo "Error: Virtual environment not found at $(VENV_DIR)"; \
+		echo "Run 'make setup' from the parent directory first"; \
+		exit 1; \
+	fi
+	@if [ ! -f "requirements.txt" ]; then \
+		echo "Error: requirements.txt not found"; \
+		exit 1; \
+	fi
+	@echo "Installing PyTorch with CUDA support and other dependencies..."
+	@echo "(This may take several minutes)"
+	@$(PIP) install -q -r requirements.txt
+	@echo ""
+	@echo "✓ Phase 6 (GPU) dependencies installed successfully!"
+	@echo ""
+	@echo "Test installation:"
+	@echo "  $(PYTHON) -c 'import torch; print(f\"PyTorch {torch.__version__}\"); print(f\"CUDA available: {torch.cuda.is_available()}\")'"
+
+install: install-cpu
 
 clean:
 	@echo "Cleaning Python cache files..."

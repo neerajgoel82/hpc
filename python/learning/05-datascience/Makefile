@@ -1,6 +1,8 @@
-.PHONY: help clean classwork homework both test test-homework list
+.PHONY: help clean classwork homework both test test-homework list install
 
-PYTHON := python3
+VENV_DIR := ../.venv
+PYTHON := $(shell if [ -f $(VENV_DIR)/bin/python ]; then echo $(VENV_DIR)/bin/python; else echo python3; fi)
+PIP := $(shell if [ -f $(VENV_DIR)/bin/pip ]; then echo $(VENV_DIR)/bin/pip; else echo pip3; fi)
 
 # Directories
 CLASSWORK_DIR := classwork
@@ -16,6 +18,7 @@ help:
 	@echo "Phase 5: Data Science - Makefile Commands"
 	@echo "================================================"
 	@echo "make help         - Show this help message"
+	@echo "make install      - Install Phase 5 dependencies"
 	@echo "make classwork    - Run all classwork programs"
 	@echo "make homework     - Run all homework programs"
 	@echo "make both         - Run both classwork and homework"
@@ -26,6 +29,26 @@ help:
 	@echo ""
 	@echo "From classwork/: python3 01_hello_world.py"
 	@echo "From homework/:  python3 01_hello_world.py"
+
+install:
+	@echo "Installing Phase 5: Data Science dependencies..."
+	@echo "=================================================="
+	@if [ ! -f "$(VENV_DIR)/bin/python" ]; then \
+		echo "Error: Virtual environment not found at $(VENV_DIR)"; \
+		echo "Run 'make setup' from the parent directory first"; \
+		exit 1; \
+	fi
+	@if [ ! -f "requirements.txt" ]; then \
+		echo "Error: requirements.txt not found"; \
+		exit 1; \
+	fi
+	@echo "Installing dependencies (this may take a few minutes)..."
+	@$(PIP) install -q -r requirements.txt
+	@echo ""
+	@echo "✓ Phase 5 dependencies installed successfully!"
+	@echo ""
+	@echo "Test installation:"
+	@echo "  $(PYTHON) -c 'import numpy, pandas, matplotlib, sklearn; print(\"All imports successful!\")'"
 
 clean:
 	@echo "Cleaning Python cache files..."
