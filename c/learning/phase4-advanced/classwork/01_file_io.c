@@ -129,7 +129,11 @@ int main() {
     }
 
     printf("Reading first record:\n");
-    fscanf(pos_file, "%s %d %f", name, &age, &gpa);
+    if (fscanf(pos_file, "%s %d %f", name, &age, &gpa) != 3) {
+        fprintf(stderr, "Error: Failed to read record\n");
+        fclose(pos_file);
+        return 1;
+    }
     printf("%s %d %.1f\n", name, age, gpa);
 
     printf("Current position: %ld\n", ftell(pos_file));

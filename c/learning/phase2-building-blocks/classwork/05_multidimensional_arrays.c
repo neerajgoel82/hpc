@@ -68,7 +68,10 @@ int main() {
     for (int i = 0; i < 2; i++) {
         for (int j = 0; j < 2; j++) {
             printf("Element [%d][%d]: ", i, j);
-            scanf("%d", &user_matrix[i][j]);
+            if (scanf("%d", &user_matrix[i][j]) != 1) {
+                fprintf(stderr, "Error: Invalid input\n");
+                return 1;
+            }
         }
     }
     printf("\nYou entered:\n");

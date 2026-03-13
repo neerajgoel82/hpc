@@ -141,15 +141,24 @@ void addContact(ContactList* list) {
 
     printf("\n--- Add New Contact ---\n");
     printf("Name: ");
-    fgets(c->name, MAX_NAME, stdin);
+    if (fgets(c->name, MAX_NAME, stdin) == NULL) {
+        fprintf(stderr, "Error: Failed to read name\n");
+        return;
+    }
     c->name[strcspn(c->name, "\n")] = '\0';
 
     printf("Phone: ");
-    fgets(c->phone, MAX_PHONE, stdin);
+    if (fgets(c->phone, MAX_PHONE, stdin) == NULL) {
+        fprintf(stderr, "Error: Failed to read phone\n");
+        return;
+    }
     c->phone[strcspn(c->phone, "\n")] = '\0';
 
     printf("Email: ");
-    fgets(c->email, MAX_EMAIL, stdin);
+    if (fgets(c->email, MAX_EMAIL, stdin) == NULL) {
+        fprintf(stderr, "Error: Failed to read email\n");
+        return;
+    }
     c->email[strcspn(c->email, "\n")] = '\0';
 
     list->count++;
@@ -187,7 +196,10 @@ void searchContact(ContactList* list) {
 
     char search_name[MAX_NAME];
     printf("\nEnter name to search: ");
-    fgets(search_name, MAX_NAME, stdin);
+    if (fgets(search_name, MAX_NAME, stdin) == NULL) {
+        fprintf(stderr, "Error: Failed to read search term\n");
+        return;
+    }
     search_name[strcspn(search_name, "\n")] = '\0';
 
     printf("\n--- Search Results ---\n");
@@ -219,7 +231,11 @@ void deleteContact(ContactList* list) {
 
     int index;
     printf("\nEnter contact number to delete (1-%d): ", list->count);
-    scanf("%d", &index);
+    if (scanf("%d", &index) != 1) {
+        fprintf(stderr, "Error: Invalid input\n");
+        clearInputBuffer();
+        return;
+    }
     clearInputBuffer();
 
     if (index < 1 || index > list->count) {
@@ -287,13 +303,25 @@ void loadFromFile(ContactList* list) {
     }
 
     for (int i = 0; i < count; i++) {
-        fgets(list->contacts[i].name, MAX_NAME, file);
+        if (fgets(list->contacts[i].name, MAX_NAME, file) == NULL) {
+            fprintf(stderr, "Error: Failed to read contact name\n");
+            fclose(file);
+            return;
+        }
         list->contacts[i].name[strcspn(list->contacts[i].name, "\n")] = '\0';
 
-        fgets(list->contacts[i].phone, MAX_PHONE, file);
+        if (fgets(list->contacts[i].phone, MAX_PHONE, file) == NULL) {
+            fprintf(stderr, "Error: Failed to read contact phone\n");
+            fclose(file);
+            return;
+        }
         list->contacts[i].phone[strcspn(list->contacts[i].phone, "\n")] = '\0';
 
-        fgets(list->contacts[i].email, MAX_EMAIL, file);
+        if (fgets(list->contacts[i].email, MAX_EMAIL, file) == NULL) {
+            fprintf(stderr, "Error: Failed to read contact email\n");
+            fclose(file);
+            return;
+        }
         list->contacts[i].email[strcspn(list->contacts[i].email, "\n")] = '\0';
     }
 

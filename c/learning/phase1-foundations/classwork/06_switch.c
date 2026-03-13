@@ -96,11 +96,20 @@ int main() {
     char operator;
 
     printf("Enter first number: ");
-    scanf("%f", &num1);
+    if (scanf("%f", &num1) != 1) {
+        fprintf(stderr, "Error: Invalid input for first number\n");
+        return 1;
+    }
     printf("Enter operator (+, -, *, /): ");
-    scanf(" %c", &operator);
+    if (scanf(" %c", &operator) != 1) {
+        fprintf(stderr, "Error: Invalid input for operator\n");
+        return 1;
+    }
     printf("Enter second number: ");
-    scanf("%f", &num2);
+    if (scanf("%f", &num2) != 1) {
+        fprintf(stderr, "Error: Invalid input for second number\n");
+        return 1;
+    }
 
     switch (operator) {
         case '+':
@@ -137,7 +146,10 @@ int main() {
     printf("3. Print Your Name\n");
     printf("4. Exit\n");
     printf("Enter your choice: ");
-    scanf("%d", &choice);
+    if (scanf("%d", &choice) != 1) {
+        fprintf(stderr, "Error: Invalid choice\n");
+        return 1;
+    }
 
     switch (choice) {
         case 1:

@@ -93,9 +93,15 @@ int main() {
     int password;
 
     printf("Enter user ID: ");
-    scanf("%d", &user_id);
+    if (scanf("%d", &user_id) != 1) {
+        fprintf(stderr, "Error: Invalid user ID\n");
+        return 1;
+    }
     printf("Enter password: ");
-    scanf("%d", &password);
+    if (scanf("%d", &password) != 1) {
+        fprintf(stderr, "Error: Invalid password\n");
+        return 1;
+    }
 
     if (user_id == 1234 && password == 5678) {
         printf("Login successful! Welcome.\n");

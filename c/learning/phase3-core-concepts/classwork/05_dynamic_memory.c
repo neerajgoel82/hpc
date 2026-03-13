@@ -109,7 +109,10 @@ int main() {
     printf("\n=== Dynamic Array from User Input ===\n");
     int n;
     printf("How many numbers do you want to enter? ");
-    scanf("%d", &n);
+    if (scanf("%d", &n) != 1) {
+        fprintf(stderr, "Error: Invalid input\n");
+        return 1;
+    }
 
     int *numbers = (int*)malloc(n * sizeof(int));
 
@@ -121,7 +124,11 @@ int main() {
     printf("Enter %d numbers:\n", n);
     for (int i = 0; i < n; i++) {
         printf("Number %d: ", i + 1);
-        scanf("%d", &numbers[i]);
+        if (scanf("%d", &numbers[i]) != 1) {
+            fprintf(stderr, "Error: Invalid input\n");
+            free(numbers);
+            return 1;
+        }
     }
 
     printf("You entered: ");

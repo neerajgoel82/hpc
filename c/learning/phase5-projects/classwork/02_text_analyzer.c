@@ -79,7 +79,10 @@ int main() {
         switch (choice) {
             case 1:
                 printf("\nEnter filename: ");
-                fgets(filename, sizeof(filename), stdin);
+                if (fgets(filename, sizeof(filename), stdin) == NULL) {
+                    fprintf(stderr, "Error: Failed to read filename\n");
+                    continue;
+                }
                 filename[strcspn(filename, "\n")] = '\0';
 
                 analyzeFile(filename);

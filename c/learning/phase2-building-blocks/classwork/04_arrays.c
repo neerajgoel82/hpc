@@ -90,7 +90,10 @@ int main() {
     printf("Enter 5 numbers:\n");
     for (int i = 0; i < 5; i++) {
         printf("Element %d: ", i + 1);
-        scanf("%d", &user_array[i]);
+        if (scanf("%d", &user_array[i]) != 1) {
+            fprintf(stderr, "Error: Invalid input\n");
+            return 1;
+        }
     }
     printf("You entered: ");
     printArray(user_array, 5);

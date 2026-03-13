@@ -51,13 +51,19 @@ int main() {
     printf("\n=== String Input ===\n");
     char name[50];
     printf("Enter your name: ");
-    scanf("%s", name);  // Reads until whitespace (no & needed!)
+    if (scanf("%s", name) != 1) {
+        fprintf(stderr, "Error: Invalid input\n");
+        return 1;
+    }
     printf("Hello, %s!\n", name);
 
     // Reading line with spaces (using fgets)
     printf("\nEnter full name with spaces: ");
     getchar();  // Consume newline from previous scanf
-    fgets(name, sizeof(name), stdin);
+    if (fgets(name, sizeof(name), stdin) == NULL) {
+        fprintf(stderr, "Error: Failed to read input\n");
+        return 1;
+    }
     name[strcspn(name, "\n")] = '\0';  // Remove trailing newline
     printf("Welcome, %s!\n", name);
 

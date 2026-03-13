@@ -135,7 +135,10 @@ int main() {
     int count_nums = 0;
 
     while (1) {  // Infinite loop
-        scanf("%d", &input);
+        if (scanf("%d", &input) != 1) {
+            fprintf(stderr, "Error: Invalid input\n");
+            return 1;
+        }
         if (input == 0) {
             break;  // Exit when user enters 0
         }

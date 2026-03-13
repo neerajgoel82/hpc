@@ -28,25 +28,37 @@ int main() {
 
     int age;
     printf("Enter your age: ");
-    scanf("%d", &age);  // Note the & (address-of operator)
+    if (scanf("%d", &age) != 1) {
+        fprintf(stderr, "Error: Invalid input for age\n");
+        return 1;
+    }
     printf("You are %d years old.\n", age);
 
     // Reading floating-point numbers
     float height;
     printf("Enter your height in cm: ");
-    scanf("%f", &height);
+    if (scanf("%f", &height) != 1) {
+        fprintf(stderr, "Error: Invalid input for height\n");
+        return 1;
+    }
     printf("Your height is %.1f cm.\n", height);
 
     // Reading characters
     char grade;
     printf("Enter your grade (A-F): ");
-    scanf(" %c", &grade);  // Note the space before %c to skip whitespace
+    if (scanf(" %c", &grade) != 1) {
+        fprintf(stderr, "Error: Invalid input for grade\n");
+        return 1;
+    }
     printf("Your grade is: %c\n", grade);
 
     // Reading multiple values
     int day, month, year;
     printf("Enter a date (DD MM YYYY): ");
-    scanf("%d %d %d", &day, &month, &year);
+    if (scanf("%d %d %d", &day, &month, &year) != 3) {
+        fprintf(stderr, "Error: Invalid date format\n");
+        return 1;
+    }
     printf("Date entered: %02d/%02d/%d\n", day, month, year);
 
     // Formatted output examples
