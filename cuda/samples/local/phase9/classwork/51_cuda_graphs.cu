@@ -156,29 +156,35 @@ int main() {
     cudaKernelNodeParams addParams = {0};
     cudaKernelNodeParams squareParams = {0};
 
+    // Create non-const copies for kernel parameters
+    int n_param = N;
+    float init_val = 1.0f;
+    float scale_val = 2.0f;
+    float add_val = 3.0f;
+
     // Setup init kernel parameters
-    void *initArgs[] = {&d_data, &N, &(float){1.0f}};
+    void *initArgs[] = {&d_data, &n_param, &init_val};
     initParams.func = (void*)initKernel;
     initParams.gridDim = dim3(blocksPerGrid);
     initParams.blockDim = dim3(threadsPerBlock);
     initParams.kernelParams = initArgs;
 
     // Setup scale kernel parameters
-    void *scaleArgs[] = {&d_data, &N, &(float){2.0f}};
+    void *scaleArgs[] = {&d_data, &n_param, &scale_val};
     scaleParams.func = (void*)scaleKernel;
     scaleParams.gridDim = dim3(blocksPerGrid);
     scaleParams.blockDim = dim3(threadsPerBlock);
     scaleParams.kernelParams = scaleArgs;
 
     // Setup add kernel parameters
-    void *addArgs[] = {&d_data, &N, &(float){3.0f}};
+    void *addArgs[] = {&d_data, &n_param, &add_val};
     addParams.func = (void*)addKernel;
     addParams.gridDim = dim3(blocksPerGrid);
     addParams.blockDim = dim3(threadsPerBlock);
     addParams.kernelParams = addArgs;
 
     // Setup square kernel parameters
-    void *squareArgs[] = {&d_data, &N};
+    void *squareArgs[] = {&d_data, &n_param};
     squareParams.func = (void*)squareKernel;
     squareParams.gridDim = dim3(blocksPerGrid);
     squareParams.blockDim = dim3(threadsPerBlock);
