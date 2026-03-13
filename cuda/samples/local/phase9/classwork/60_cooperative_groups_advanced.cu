@@ -166,30 +166,27 @@ __global__ void multiBlockReduction(const float *input, float *output,
     }
 }
 
-// Demonstrate labeled partitions (flexible subgroups)
-__global__ void labeledPartitionKernel(int *data, int n) {
+// Demonstrate tiled partitions with multiple tile sizes
+__global__ void tiledPartitionKernel(int *data, int n) {
     auto block = cg::this_thread_block();
 
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
-    int val = (idx < n) ? data[idx] : -1;
+    int val = (idx < n) ? data[idx] : 0;
 
-    // Create labeled partition based on value % 4
-    // Threads with same label form a group
-    int label = (val >= 0) ? (val % 4) : -1;
-    auto labeled_group = cg::labeled_partition(block, label);
+    // Create different sized tiles to demonstrate flexibility
+    // Use 16-thread tiles for this example
+    auto tile16 = cg::tiled_partition<16>(block);
 
-    if (val >= 0) {
-        // Cooperate only with threads having same label
-        int group_sum = val;
-
-        // Sum within labeled group
-        for (int i = 1; i < labeled_group.size(); i++) {
-            group_sum += labeled_group.shfl(val, i);
+    if (idx < n) {
+        // Sum within 16-thread tile using shuffle
+        int sum = val;
+        for (int offset = tile16.size() / 2; offset > 0; offset /= 2) {
+            sum += tile16.shfl_down(sum, offset);
         }
 
-        // First thread in group writes result
-        if (labeled_group.thread_rank() == 0 && idx < n) {
-            data[idx] = group_sum;
+        // First thread in each tile writes the tile sum
+        if (tile16.thread_rank() == 0) {
+            data[idx] = sum;
         }
     }
 }
@@ -263,12 +260,12 @@ int main() {
     CUDA_CHECK(cudaDeviceSynchronize());
     printf("Coalesced group prefix sum completed\n");
 
-    // Test 3: Labeled partitions
-    printf("\n=== Labeled Partitions ===\n");
+    // Test 3: Tiled partitions (16-thread tiles)
+    printf("\n=== Tiled Partitions (16-thread tiles) ===\n");
     CUDA_CHECK(cudaMemcpy(d_data, h_data, bytes, cudaMemcpyHostToDevice));
-    labeledPartitionKernel<<<blocksPerGrid, threadsPerBlock>>>(d_data, n);
+    tiledPartitionKernel<<<blocksPerGrid, threadsPerBlock>>>(d_data, n);
     CUDA_CHECK(cudaDeviceSynchronize());
-    printf("Labeled partition reduction completed\n");
+    printf("Tiled partition reduction completed\n");
 
     // Test 4: Grid-wide synchronization (requires cooperative launch)
     if (prop.cooperativeLaunch) {
@@ -314,9 +311,9 @@ int main() {
 
     printf("\n=== Key Concepts ===\n");
     printf("1. Grid groups enable synchronization across all thread blocks\n");
-    printf("2. Tiled partitions create fixed-size subgroups (warps, tiles)\n");
+    printf("2. Tiled partitions create fixed-size subgroups (4, 8, 16, 32 threads)\n");
     printf("3. Coalesced groups adapt to runtime thread activity\n");
-    printf("4. Labeled partitions group threads by arbitrary criteria\n");
+    printf("4. Warp-level operations avoid explicit synchronization\n");
     printf("5. Cooperative launch required for grid synchronization\n");
     printf("6. More flexible and efficient than traditional __syncthreads()\n");
 
