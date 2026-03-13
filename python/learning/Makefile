@@ -168,28 +168,24 @@ test:
 		if [ -d "$$phase" ]; then \
 			echo "Checking $$phase..."; \
 			if [ -d "$$phase/classwork" ]; then \
-				for file in $$phase/classwork/*.py; do \
-					if [ -f "$$file" ]; then \
-						total=$$((total + 1)); \
-						if $(PYTHON) -m py_compile "$$file" 2>/dev/null; then \
-							echo "  ✓ $$(basename $$file)"; \
-						else \
-							echo "  ✗ $$(basename $$file) - syntax error"; \
-							failed=$$((failed + 1)); \
-						fi; \
+				for file in $$(find "$$phase/classwork" -name "*.py" -type f 2>/dev/null); do \
+					total=$$((total + 1)); \
+					if $(PYTHON) -m py_compile "$$file" 2>/dev/null; then \
+						echo "  ✓ $$file"; \
+					else \
+						echo "  ✗ $$file - syntax error"; \
+						failed=$$((failed + 1)); \
 					fi; \
 				done; \
 			fi; \
 			if [ -d "$$phase/homework" ]; then \
-				for file in $$phase/homework/*.py; do \
-					if [ -f "$$file" ]; then \
-						total=$$((total + 1)); \
-						if $(PYTHON) -m py_compile "$$file" 2>/dev/null; then \
-							echo "  ✓ $$(basename $$file)"; \
-						else \
-							echo "  ✗ $$(basename $$file) - syntax error"; \
-							failed=$$((failed + 1)); \
-						fi; \
+				for file in $$(find "$$phase/homework" -name "*.py" -type f 2>/dev/null); do \
+					total=$$((total + 1)); \
+					if $(PYTHON) -m py_compile "$$file" 2>/dev/null; then \
+						echo "  ✓ $$file"; \
+					else \
+						echo "  ✗ $$file - syntax error"; \
+						failed=$$((failed + 1)); \
 					fi; \
 				done; \
 			fi; \
