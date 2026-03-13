@@ -98,7 +98,13 @@ install-gpu:
 	@echo ""
 	@echo "Step 4: Verifying installation..."
 	@echo "----------------------------------------"
-	@$(PYTHON) -c 'import torch; print(f"  PyTorch version: {torch.__version__}"); print(f"  CUDA available: {torch.cuda.is_available()}"); print(f"  CUDA version (PyTorch): {torch.version.cuda if torch.cuda.is_available() else \"N/A\"}"); print(f"  cuDNN version: {torch.backends.cudnn.version() if torch.cuda.is_available() else \"N/A\"}"); print(f"  Number of GPUs: {torch.cuda.device_count() if torch.cuda.is_available() else 0}"); [print(f"  GPU {i}: {torch.cuda.get_device_name(i)} ({torch.cuda.get_device_properties(i).total_memory / 1024**3:.1f} GB)") for i in range(torch.cuda.device_count())] if torch.cuda.is_available() else None'
+	@$(PYTHON) -c "import torch; \
+print(f'  PyTorch version: {torch.__version__}'); \
+print(f'  CUDA available: {torch.cuda.is_available()}'); \
+print(f'  CUDA version (PyTorch): {torch.version.cuda if torch.cuda.is_available() else \"N/A\"}'); \
+print(f'  cuDNN version: {torch.backends.cudnn.version() if torch.cuda.is_available() else \"N/A\"}'); \
+print(f'  Number of GPUs: {torch.cuda.device_count() if torch.cuda.is_available() else 0}'); \
+[print(f'  GPU {i}: {torch.cuda.get_device_name(i)} ({torch.cuda.get_device_properties(i).total_memory / 1024**3:.1f} GB)') for i in range(torch.cuda.device_count())] if torch.cuda.is_available() else None"
 	@echo ""
 	@if ! $(PYTHON) -c 'import torch; exit(0 if torch.cuda.is_available() else 1)' 2>/dev/null; then \
 		echo "⚠ WARNING: PyTorch installed but CUDA not available!"; \
@@ -147,7 +153,14 @@ check-cuda:
 	@echo "2. PyTorch CUDA Information:"
 	@echo "----------------------------------------"
 	@if [ -f "$(VENV_DIR)/bin/python" ]; then \
-		$(PYTHON) -c 'import torch; print(f"   PyTorch version: {torch.__version__}"); print(f"   CUDA available: {torch.cuda.is_available()}"); print(f"   CUDA version (PyTorch): {torch.version.cuda if torch.cuda.is_available() else \"N/A\"}"); print(f"   cuDNN enabled: {torch.backends.cudnn.enabled if torch.cuda.is_available() else False}"); print(f"   cuDNN version: {torch.backends.cudnn.version() if torch.cuda.is_available() else \"N/A\"}"); print(f"   Number of GPUs: {torch.cuda.device_count()}"); [print(f"   GPU {i}: {torch.cuda.get_device_name(i)} ({torch.cuda.get_device_properties(i).total_memory / 1024**3:.1f} GB)") for i in range(torch.cuda.device_count())]' 2>/dev/null || echo "   PyTorch not installed or import error"; \
+		$(PYTHON) -c "import torch; \
+print(f'   PyTorch version: {torch.__version__}'); \
+print(f'   CUDA available: {torch.cuda.is_available()}'); \
+print(f'   CUDA version (PyTorch): {torch.version.cuda if torch.cuda.is_available() else \"N/A\"}'); \
+print(f'   cuDNN enabled: {torch.backends.cudnn.enabled if torch.cuda.is_available() else False}'); \
+print(f'   cuDNN version: {torch.backends.cudnn.version() if torch.cuda.is_available() else \"N/A\"}'); \
+print(f'   Number of GPUs: {torch.cuda.device_count()}'); \
+[print(f'   GPU {i}: {torch.cuda.get_device_name(i)} ({torch.cuda.get_device_properties(i).total_memory / 1024**3:.1f} GB)') for i in range(torch.cuda.device_count())]" 2>/dev/null || echo "   PyTorch not installed or import error"; \
 	else \
 		echo "   Virtual environment not found"; \
 		echo "   Run 'make setup' first"; \
