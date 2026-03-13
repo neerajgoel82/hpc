@@ -1,0 +1,22 @@
+# Python Learning Requirements
+# Core requirements for Phase 1-4 (Foundations through Advanced)
+
+# No special requirements for Phase 1-4 basic Python
+# All samples use standard library only
+
+# Optional: For better development experience
+ipython>=8.10.0
+
+# Phase 5: Data Science (optional, install separately with make install-phase5)
+# numpy>=1.24.0
+# pandas>=2.0.0
+# matplotlib>=3.7.0
+# scipy>=1.10.0
+# scikit-learn>=1.2.0
+# seaborn>=0.12.0
+# jupyter>=1.0.0
+
+# Phase 6: PyTorch (optional, install separately with make install-phase6-cpu or -gpu)
+# torch>=2.0.0
+# torchvision>=0.15.0
+# torchaudio>=2.0.0

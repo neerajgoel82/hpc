@@ -1,6 +1,7 @@
-.PHONY: help clean clean-all install-phase5 install-phase6 test test-all list-all
+.PHONY: help clean clean-all setup install-phase5 install-phase6 test test-all list-all
 
-PYTHON := python3
+VENV_DIR := .venv
+PYTHON := $(shell if [ -f $(VENV_DIR)/bin/python ]; then echo $(VENV_DIR)/bin/python; else echo python3; fi)
 PHASES := 01-foundations 02-intermediate 03-oop 04-advanced 05-datascience 06-pytorch
 
 help:
@@ -9,6 +10,7 @@ help:
 	@echo ""
 	@echo "Overview Commands:"
 	@echo "  make help           - Show this help message"
+	@echo "  make setup          - Create virtual environment and install requirements"
 	@echo "  make test           - Check Python syntax for all files"
 	@echo "  make test-all       - Run tests in all phases"
 	@echo "  make classwork-all  - Run all classwork in all phases"
@@ -65,6 +67,18 @@ list-all:
 			echo ""; \
 		fi; \
 	done
+
+setup:
+	@echo "Setting up Python learning environment..."
+	@echo "=========================================="
+	@if [ ! -f "00-setup/setup.sh" ]; then \
+		echo "Error: setup script not found at 00-setup/setup.sh"; \
+		exit 1; \
+	fi
+	@./00-setup/setup.sh
+	@echo ""
+	@echo "Setup complete! Virtual environment created at .venv/"
+	@echo "To use it: source .venv/bin/activate"
 
 clean:
 	@echo "Cleaning all phases (cache files)..."
