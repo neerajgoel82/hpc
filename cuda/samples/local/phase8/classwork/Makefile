@@ -1,6 +1,7 @@
 # Classwork - build all .cu in this directory
 NVCC = nvcc
 NVCC_FLAGS = -arch=sm_70 -O2
+LIBS = -lcufft
 
 SRCS = $(wildcard *.cu)
 PROGS = $(SRCS:.cu=)
@@ -9,7 +10,7 @@ all: $(PROGS)
 	@echo "Classwork programs built successfully"
 
 %: %.cu
-	$(NVCC) $(NVCC_FLAGS) $< -o $@
+	$(NVCC) $(NVCC_FLAGS) $< -o $@ $(LIBS)
 
 clean:
 	rm -f $(PROGS)
