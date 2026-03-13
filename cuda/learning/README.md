@@ -12,12 +12,12 @@ nvcc --version
 nvidia-smi
 
 # 2. Build and run (classwork = reference programs; homework = your exercises)
-make                    # build all classwork in every phase
-cd phase1 && make test  # build and run phase1 classwork
+make                                  # build all classwork in every phase
+cd 01-foundations && make test        # build and run phase 1 classwork
 
 # Or build/run a single program
-cd phase1
-make classwork          # build classwork/*.cu
+cd 01-foundations
+make classwork                        # build classwork/*.cu
 ./classwork/01_hello_world
 
 # 3. Follow the phases sequentially (classwork first, then homework)
@@ -95,8 +95,8 @@ source ~/.bashrc
 nvcc --version
 nvidia-smi
 
-# Test compile (from local/)
-make -C phase1 classwork && phase1/classwork/01_hello_world
+# Test compile
+make -C 01-foundations classwork && 01-foundations/classwork/01_hello_world
 ```
 
 ---
@@ -126,7 +126,7 @@ nvcc --version
 nvidia-smi
 
 # Test compile
-nvcc phase1\01_hello_world.cu -o test.exe
+nvcc 01-foundations\classwork\01_hello_world.cu -o test.exe
 test.exe
 ```
 
@@ -148,23 +148,23 @@ test.exe
 Each phase has **classwork** (reference programs) and **homework** (exercise stubs). Build with `make` (classwork) or `make both` (classwork + homework).
 
 ```
-local/
-├── Makefile            # all, both, clean, test, test-homework
-├── README.md           # This file
+learning/
+├── Makefile                      # all, both, clean, test, test-homework
+├── README.md                     # This file
 │
-├── phase1/             # Foundations
-│   ├── Makefile        # classwork, homework, both, test, test-homework
-│   ├── classwork/      # 01_hello_world.cu, 02_device_query.cu, ...
-│   └── homework/       # Exercise stubs (implement based on classwork)
+├── 01-foundations/               # Basics, device queries, thread indexing
+│   ├── Makefile                  # classwork, homework, both, test, test-homework
+│   ├── classwork/                # 01_hello_world.cu, 02_device_query.cu, ...
+│   └── homework/                 # Exercise stubs (implement based on classwork)
 │
-├── phase2/             # Memory Management
-├── phase3/             # Optimization
-├── phase4/             # Advanced Memory
-├── phase5/             # Advanced Algorithms
-├── phase6/             # Streams & Concurrency
-├── phase7/             # Performance Engineering
-├── phase8/             # Real Applications
-└── phase9/             # Modern CUDA
+├── 02-memory-management/         # Memory transfers, shared memory, coalescing
+├── 03-optimization/              # Warp ops, reduction, tiling
+├── 04-advanced-memory/           # Texture, constant, atomics
+├── 05-advanced-algorithms/       # GEMM, sorting, cuBLAS
+├── 06-streams-concurrency/       # Streams, async, multi-GPU
+├── 07-performance-engineering/   # Profiling, debugging, optimization
+├── 08-applications/              # Real-world projects (N-body, ML, etc.)
+└── 09-modern-cuda/               # Graphs, tensor cores, dynamic parallelism
 ```
 
 **Total**: 67 CUDA programs across 9 phases (classwork + matching homework stubs)
@@ -235,7 +235,7 @@ Choose the right `-arch` flag for your GPU:
 
 **Find your GPU's capability**:
 ```bash
-cd phase1 && make classwork && ./classwork/02_device_query
+cd 01-foundations && make classwork && ./classwork/02_device_query
 ```
 
 ---
@@ -249,7 +249,7 @@ cd phase1 && make classwork && ./classwork/02_device_query
 
 **Compile & Run**:
 ```bash
-cd phase1
+cd 01-foundations
 make classwork
 ./classwork/03_vector_add
 ```
@@ -489,7 +489,7 @@ nvidia-smi --query-gpu=name,compute_cap,memory.total --format=csv
 echo
 
 echo "4. Test Compilation:"
-cd phase1
+cd 01-foundations/classwork
 if nvcc 01_hello_world.cu -o test_compile 2>/dev/null; then
     echo "✓ Compilation successful"
     ./test_compile
@@ -510,10 +510,10 @@ chmod +x check_setup.sh
 ## Next Steps
 
 1. **Verify installation**: Run the verification script above
-2. **Test compilation**: Build and run `phase1/01_hello_world.cu`
-3. **Query your GPU**: Run `phase1/02_device_query.cu`
+2. **Test compilation**: Build and run `01-foundations/classwork/01_hello_world.cu`
+3. **Query your GPU**: Run `01-foundations/classwork/02_device_query.cu`
 4. **Start learning**: Follow phases 1-9 sequentially
-5. **Use profiling tools**: Essential in Phase 7 and beyond
+5. **Use profiling tools**: Essential in 07-performance-engineering and beyond
 
 ---
 
@@ -552,4 +552,4 @@ If you encounter issues:
 
 ---
 
-**Ready to start?** Verify your installation and run `make -C phase1 classwork && phase1/classwork/01_hello_world`. 🚀
+**Ready to start?** Verify your installation and run `make -C 01-foundations classwork && 01-foundations/classwork/01_hello_world`. 🚀

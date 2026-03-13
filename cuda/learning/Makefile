@@ -1,5 +1,5 @@
 # Root Makefile - CUDA samples (classwork / homework per phase)
-PHASES = phase1 phase2 phase3 phase4 phase5 phase6 phase7 phase8 phase9
+PHASES = 01-foundations 02-memory-management 03-optimization 04-advanced-memory 05-advanced-algorithms 06-streams-concurrency 07-performance-engineering 08-applications 09-modern-cuda
 
 all:
 	@for phase in $(PHASES); do \
