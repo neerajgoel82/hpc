@@ -11,7 +11,10 @@ Learning Objectives:
 print("=== USER INPUT ===\n")
 
 # The input() function always returns a string
-name = input("What is your name? ")
+try:
+    name = input("What is your name? ")
+except EOFError:
+    name = "Alice"  # Default for non-interactive runs
 print("Hello, " + name + "!")
 
 # TODO: Ask the user for their favorite color and print a response
@@ -19,7 +22,10 @@ print("Hello, " + name + "!")
 
 # Getting numeric input requires type conversion
 print("\n--- Numeric Input ---")
-age_string = input("How old are you? ")
+try:
+    age_string = input("How old are you? ")
+except EOFError:
+    age_string = "25"  # Default for non-interactive runs
 age = int(age_string)  # Convert string to integer
 print(f"In 10 years, you will be {age + 10} years old.")
 
