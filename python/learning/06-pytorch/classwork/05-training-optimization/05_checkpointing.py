@@ -224,6 +224,7 @@ def demonstrate_checkpoint_loading():
     print("="*60)
 
     checkpoint_dir = 'checkpoints'
+    Path(checkpoint_dir).mkdir(exist_ok=True)
 
     # Create and train a model
     print("\n1. Training initial model...")
