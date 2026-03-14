@@ -570,31 +570,50 @@ def main():
     print("5. Combined Optimization Techniques")
     print("0. Run all solutions")
 
-    choice = input("\nEnter choice (0-5): ").strip()
+    try:
+        choice = input("\nEnter choice (0-5): ").strip()
+    except EOFError:
+        # Non-interactive mode: run all solutions
+        choice = '0'
 
     if choice == '1':
         exercise1_cosine_annealing_warm_restarts()
-        run_solution = input("Run solution? (y/n): ").strip().lower()
+        try:
+            run_solution = input("Run solution? (y/n): ").strip().lower()
+        except EOFError:
+            run_solution = 'y'
         if run_solution == 'y':
             exercise1_solution()
     elif choice == '2':
         exercise2_batch_normalization_comparison()
-        run_solution = input("Run solution? (y/n): ").strip().lower()
+        try:
+            run_solution = input("Run solution? (y/n): ").strip().lower()
+        except EOFError:
+            run_solution = 'y'
         if run_solution == 'y':
             exercise2_solution()
     elif choice == '3':
         exercise3_custom_augmentation()
-        run_solution = input("Run solution? (y/n): ").strip().lower()
+        try:
+            run_solution = input("Run solution? (y/n): ").strip().lower()
+        except EOFError:
+            run_solution = 'y'
         if run_solution == 'y':
             exercise3_solution()
     elif choice == '4':
         exercise4_early_stopping_restoration()
-        run_solution = input("Run solution? (y/n): ").strip().lower()
+        try:
+            run_solution = input("Run solution? (y/n): ").strip().lower()
+        except EOFError:
+            run_solution = 'y'
         if run_solution == 'y':
             exercise4_solution()
     elif choice == '5':
         exercise5_combined_optimization()
-        run_solution = input("Run solution? (y/n): ").strip().lower()
+        try:
+            run_solution = input("Run solution? (y/n): ").strip().lower()
+        except EOFError:
+            run_solution = 'y'
         if run_solution == 'y':
             exercise5_solution()
     elif choice == '0':
