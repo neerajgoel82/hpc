@@ -180,9 +180,9 @@ def main():
     def top_n_sales(group, n=3):
         return group.nlargest(n, 'Sales')
 
-    top_sales = df.groupby('Product').apply(top_n_sales, n=2)
+    top_sales = df.groupby('Product', group_keys=False).apply(top_n_sales, n=2)
     print("Top 2 sales for each product:")
-    print(top_sales[['Product', 'Sales', 'Quantity']])
+    print(top_sales[['Date', 'Region', 'Sales', 'Quantity']])
 
     # 9. Grouping by time periods
     print("\n9. Grouping by Time Periods")

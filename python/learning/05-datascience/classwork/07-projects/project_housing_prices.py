@@ -172,10 +172,10 @@ def clean_and_engineer_features(df):
     print(f"\nMissing values before: {df.isnull().sum().sum()}")
 
     # Fill lot_size with median
-    df['lot_size'].fillna(df['lot_size'].median(), inplace=True)
+    df['lot_size'] = df['lot_size'].fillna(df['lot_size'].median())
 
     # Fill age with median
-    df['age'].fillna(df['age'].median(), inplace=True)
+    df['age'] = df['age'].fillna(df['age'].median())
 
     print(f"Missing values after: {df.isnull().sum().sum()}")
 

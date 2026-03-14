@@ -323,7 +323,7 @@ def main():
     labels_effect = [f'Explained by\ngroups\n({eta_squared*100:.1f}%)',
                      f'Unexplained\n({(1-eta_squared)*100:.1f}%)']
     ax6.pie(effect_components, labels=labels_effect, autopct='',
-           colors=['#ff9999', '#lightgray'], startangle=90)
+           colors=['#ff9999', 'lightgray'], startangle=90)
     ax6.set_title(f'Effect Size (η² = {eta_squared:.4f})')
 
     plt.tight_layout()

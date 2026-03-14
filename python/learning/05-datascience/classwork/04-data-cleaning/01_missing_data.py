@@ -97,12 +97,12 @@ def main():
     print(df_filled_dict)
 
     # Forward fill (use previous value)
-    df_ffill = df.fillna(method='ffill')
+    df_ffill = df.ffill()
     print("\nForward fill (ffill) - use previous value:")
     print(df_ffill)
 
     # Backward fill (use next value)
-    df_bfill = df.fillna(method='bfill')
+    df_bfill = df.bfill()
     print("\nBackward fill (bfill) - use next value:")
     print(df_bfill)
 

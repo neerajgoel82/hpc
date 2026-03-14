@@ -177,10 +177,10 @@ def clean_and_engineer_features(df):
     print(f"Missing values before: {df.isnull().sum().sum()}")
 
     # Fill total_charges with median
-    df['total_charges'].fillna(df['total_charges'].median(), inplace=True)
+    df['total_charges'] = df['total_charges'].fillna(df['total_charges'].median())
 
     # Fill tenure_months with median
-    df['tenure_months'].fillna(df['tenure_months'].median(), inplace=True)
+    df['tenure_months'] = df['tenure_months'].fillna(df['tenure_months'].median())
 
     print(f"Missing values after: {df.isnull().sum().sum()}")
 

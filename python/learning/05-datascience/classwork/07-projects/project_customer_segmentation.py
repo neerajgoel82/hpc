@@ -150,7 +150,7 @@ def preprocess_data(df):
 
     # Handle missing values
     print(f"Missing values before: {df.isnull().sum().sum()}")
-    df['income'].fillna(df['income'].median(), inplace=True)
+    df['income'] = df['income'].fillna(df['income'].median())
     print(f"Missing values after: {df.isnull().sum().sum()}")
 
     # Feature engineering

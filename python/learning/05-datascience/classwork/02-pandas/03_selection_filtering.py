@@ -219,7 +219,9 @@ def main():
 
     # Update based on condition
     df_copy = df.copy()
-    df_copy.loc[df_copy['Department'] == 'IT', 'Salary'] *= 1.1
+    df_copy.loc[df_copy['Department'] == 'IT', 'Salary'] = (
+        df_copy.loc[df_copy['Department'] == 'IT', 'Salary'] * 1.1
+    ).astype(int)
     print("\nAfter 10% raise for IT department:")
     print(df_copy[['Name', 'Department', 'Salary']])
 

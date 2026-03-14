@@ -219,7 +219,7 @@ def main():
 
     # L2 normalization (Euclidean norm)
     print("\nL2 Normalization (unit vector):")
-    df_l2 = df_norm.copy()
+    df_l2 = df_norm.copy().astype(float)
     for idx in df_l2.index:
         row = df_l2.loc[idx]
         l2_norm = np.sqrt((row ** 2).sum())
@@ -236,7 +236,7 @@ def main():
 
     # L1 normalization (Manhattan norm)
     print("\nL1 Normalization:")
-    df_l1 = df_norm.copy()
+    df_l1 = df_norm.copy().astype(float)
     for idx in df_l1.index:
         row = df_l1.loc[idx]
         l1_norm = np.abs(row).sum()
