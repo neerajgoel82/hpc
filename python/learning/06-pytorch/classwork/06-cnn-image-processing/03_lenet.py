@@ -42,7 +42,8 @@ class LeNet5(nn.Module):
         self.conv3 = nn.Conv2d(16, 120, kernel_size=5, stride=1)
 
         # Fully connected layers
-        self.fc1 = nn.Linear(120, 84)
+        # With padding=2 on conv1 and 32x32 input: conv3 output is 120x2x2 = 480
+        self.fc1 = nn.Linear(480, 84)
         self.fc2 = nn.Linear(84, num_classes)
 
     def forward(self, x):
@@ -95,7 +96,8 @@ class ModernLeNet(nn.Module):
 
         self.conv3 = nn.Conv2d(16, 120, kernel_size=5, stride=1)
 
-        self.fc1 = nn.Linear(120, 84)
+        # With padding=2 on conv1 and 32x32 input: conv3 output is 120x2x2 = 480
+        self.fc1 = nn.Linear(480, 84)
         self.dropout = nn.Dropout(0.5)
         self.fc2 = nn.Linear(84, num_classes)
 

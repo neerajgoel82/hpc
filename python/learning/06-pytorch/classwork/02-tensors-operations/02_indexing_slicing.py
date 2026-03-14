@@ -74,12 +74,12 @@ def slicing_operations():
     slice3 = tensor[:, ::2]
     print(f"\nEvery other column:\n{slice3}")
 
-    # Reverse rows
-    reverse_rows = tensor[::-1]
+    # Reverse rows (PyTorch doesn't support negative step in slicing; use torch.flip)
+    reverse_rows = torch.flip(tensor, dims=[0])
     print(f"\nReversed rows:\n{reverse_rows}")
 
     # Reverse columns
-    reverse_cols = tensor[:, ::-1]
+    reverse_cols = torch.flip(tensor, dims=[1])
     print(f"\nReversed columns:\n{reverse_cols}")
 
     # Complex slicing

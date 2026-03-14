@@ -162,7 +162,7 @@ def demonstrate_reduce_on_plateau():
     model = SimpleNet()
     optimizer = optim.SGD(model.parameters(), lr=0.1)
     scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.5,
-                                  patience=5, verbose=False)
+                                  patience=5)
 
     X_train, y_train = generate_dummy_data()
     lr_hist, loss_hist = train_with_scheduler(model, optimizer, scheduler,

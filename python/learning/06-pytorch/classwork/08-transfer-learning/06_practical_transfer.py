@@ -220,7 +220,7 @@ def train_model(model, train_loader, val_loader, device, epochs=10):
 
     # Learning rate scheduler
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.5, patience=2, verbose=True
+        optimizer, mode='min', factor=0.5, patience=2
     )
 
     print(f"Training for {epochs} epochs...")

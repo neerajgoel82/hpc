@@ -50,11 +50,11 @@ class SimpleImageDataset(Dataset):
 
     def _create_dummy_data(self):
         """Create dummy data for demonstration"""
-        # Create synthetic images
+        # Create synthetic images as numpy uint8 arrays (compatible with ToTensor)
         for class_idx in range(3):
             for img_idx in range(10):
-                # Create random image
-                img = torch.randn(3, 32, 32)
+                # Create random image as HxWxC uint8 numpy array
+                img = np.random.randint(0, 255, (32, 32, 3), dtype=np.uint8)
                 self.images.append(img)
                 self.labels.append(class_idx)
 
@@ -85,8 +85,11 @@ class SimpleImageDataset(Dataset):
         if isinstance(self.images[idx], str):
             # Load image from file
             image = Image.open(self.images[idx]).convert('RGB')
+        elif isinstance(self.images[idx], np.ndarray):
+            # Convert numpy array to PIL Image (compatible with ToTensor)
+            image = Image.fromarray(self.images[idx])
         else:
-            # Use pre-loaded image
+            # Use pre-loaded tensor image directly
             image = self.images[idx]
 
         label = self.labels[idx]

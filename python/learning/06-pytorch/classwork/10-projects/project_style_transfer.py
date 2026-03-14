@@ -100,9 +100,9 @@ def deprocess_image(tensor):
     """Convert tensor back to displayable image."""
     image = tensor.clone().squeeze(0)
 
-    # Denormalize
-    mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1)
-    std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1)
+    # Denormalize (keep on same device as image)
+    mean = torch.tensor([0.485, 0.456, 0.406]).view(3, 1, 1).to(image.device)
+    std = torch.tensor([0.229, 0.224, 0.225]).view(3, 1, 1).to(image.device)
     image = image * std + mean
 
     # Clamp to valid range

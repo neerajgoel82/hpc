@@ -228,7 +228,7 @@ def train_classifier(model, train_loader, test_loader, device, epochs=10, lr=0.0
     """Complete training pipeline"""
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=lr)
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=2, verbose=True)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', patience=2)
 
     history = {'train_loss': [], 'train_acc': [], 'test_loss': [], 'test_acc': []}
 
