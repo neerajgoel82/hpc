@@ -74,5 +74,10 @@
         "default": "right",
         "jupyter-notebook": "left"
     },
-    "cmake.ignoreCMakeListsMissing": true
+    "cmake.ignoreCMakeListsMissing": true,
+    "cSpell.words": [
+        "cuda",
+        "fprintf",
+        "stdlib"
+    ]
 }
