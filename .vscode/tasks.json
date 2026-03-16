@@ -38,7 +38,7 @@
             "type": "shell",
             "command": "make all",
             "options": {
-                "cwd": "${workspaceFolder}/c/samples"
+                "cwd": "${workspaceFolder}/c/learning"
             },
             "group": "build",
             "presentation": {
@@ -107,13 +107,43 @@
             "type": "shell",
             "command": "./test_all_modules.sh",
             "options": {
-                "cwd": "${workspaceFolder}/cpp/samples"
+                "cwd": "${workspaceFolder}/cpp/learning"
             },
             "group": "test",
             "presentation": {
                 "reveal": "always",
                 "panel": "shared"
             }
+        },
+        // ============ CUDA Tasks ============
+        {
+            "label": "Build CUDA (current file)",
+            "type": "shell",
+            "command": "/usr/local/cuda-12.8/bin/nvcc",
+            "args": [
+                "-g",
+                "-G",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}"
+            ],
+            "group": "build",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Build and Run CUDA",
+            "type": "shell",
+            "command": "/usr/local/cuda-12.8/bin/nvcc -g -G '${file}' -o '${fileDirname}/${fileBasenameNoExtension}' && '${fileDirname}/${fileBasenameNoExtension}'",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            },
+            "problemMatcher": ["$gcc"]
         },
         // ============ Python Tasks ============
         {
